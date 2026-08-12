@@ -9,7 +9,7 @@ const products = [
     title: `Relaxed Striped Polo T-Shirt`,
     src: cardImage,
     price: 15.59,
-    dis: 50,
+    dis: 25,
     colors: [`white`, `black`, `gray`],
   },
   {

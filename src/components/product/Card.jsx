@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 
 function Card({ product }) {
   const getDisc = (price, dis) => {
-    return ((price * dis) / 100).toFixed(2);
+    return (price - (price * dis) / 100).toFixed(2);
   };
   return (
     <div className="relative flex flex-col items-center gap-4">
       <Link
         to={`/products/${product.id}`}
+        state={{ product }}
         className="w-full flex justify-center items-center"
       >
         <img
