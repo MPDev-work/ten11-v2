@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/src/fonts/Inter-VariableFont_opsz\,wght.ttf') format('TrueType');
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scroll-padding: 0;
+  scroll-margin: 0;
+  scrollbar-color: gray transparent;
+}
+
+.animate-slider {
+  animation: slider 20s cubic-bezier(0.58, 0, 0.02, 0.98) infinite;
+}
+
+@keyframes navbar-slide-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes navbar-slide-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slider {
+  0% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-100vw);
+  }
+  35% {
+    transform: translateX(-100vw);
+  }
+  40% {
+    transform: translateX(-200vw);
+  }
+  55% {
+    transform: translateX(-200vw);
+  }
+  60% {
+    transform: translateX(-300vw);
+  }
+  75% {
+    transform: translateX(-300vw);
+  }
+  80% {
+    transform: translateX(-400vw);
+  }
+  95% {
+    transform: translateX(-400vw);
+  }
+  100% {
+    transform: translateX(-500vw);
+  }
+}
