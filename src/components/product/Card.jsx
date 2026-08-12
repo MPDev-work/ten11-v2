@@ -1,4 +1,5 @@
 import { Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function Card({ product }) {
   const getDisc = (price, dis) => {
@@ -6,13 +7,16 @@ function Card({ product }) {
   };
   return (
     <div className="relative flex flex-col items-center gap-4">
-      <a href="#" className="w-full flex justify-center items-center">
+      <Link
+        to={`/products/${product.id}`}
+        className="w-full flex justify-center items-center"
+      >
         <img
           loading="lazy"
           className="w-full h-max object-cover"
           src={product.src}
         />
-      </a>
+      </Link>
       <div className="w-full flex flex-col gap2.5 px-3">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2.5 items-end">
@@ -40,6 +44,7 @@ function Card({ product }) {
           {product.colors.map((color) => {
             return (
               <div
+                key={color}
                 style={{ background: color }}
                 className="h-[15px] w-[15px] border-[0.5px] border-gray-400 rounded-[4px]"
               ></div>

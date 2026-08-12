@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   ArrowUpRight,
   Bell,
   Handbag,
   Heart,
+  LogOut,
   Search as SearchIcon,
   X,
 } from 'lucide-react';
 import { brandData } from '../../data/brands';
+import { auth } from '../../lib/firebaseClient';
 import ActionModal from '../common/ActionModal';
 
 const panelContent = {
@@ -51,8 +55,15 @@ function HeaderButton({ label, icon: Icon, onClick, badge }) {
 function Navbar({ setOpenFav, openFav }) {
   const [activeModal, setActiveModal] = useState(null);
   const [query, setQuery] = useState('');
+  const [user, setUser] = useState(null);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
   const isOpen = activeModal !== null || openFav;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -91,6 +102,20 @@ function Navbar({ setOpenFav, openFav }) {
     setOpenFav(true);
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (authError) {
+      console.error('Firebase logout error:', authError);
+      window.alert('Unable to log out. Please try again.');
+    }
+  };
+
+  const username = user?.firstname || user?.email?.split('@')[0] || '';
+  const displayName = username.slice(0, 1).toUpperCase() + username.slice(1);
+  const userInitial = username.charAt(0).toUpperCase();
+
   const panel =
     activeModal && activeModal !== 'search'
       ? panelContent[activeModal]
@@ -104,31 +129,42 @@ function Navbar({ setOpenFav, openFav }) {
           <ul className="hidden items-center gap-6 xl:flex">
             {['men', 'women', 'kids', 'accessories', 'z.home'].map((item) => (
               <li key={item}>
-                <a
-                  href="#"
+                <Link
+                  to={item === 'men' ? '/men' : '/'}
                   className="text-base font-semibold uppercase text-black transition duration-150 hover:text-gray-500"
                 >
                   {item}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold uppercase text-black"
           >
             ten11
-          </a>
+          </Link>
           <div className="ml-auto flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => openModal('search')}
-              className="hidden h-9 items-center gap-2 rounded-sm border border-gray-300 pl-4 pr-20 text-base font-medium text-gray-300 transition duration-150 hover:border-gray-400 hover:text-gray-500 sm:flex"
-              aria-label="Search"
-            >
-              <SearchIcon size={20} className="text-gray-400" />{' '}
-              <span>Search</span>
-            </button>
+            {!user ? (
+              <button
+                type="button"
+                onClick={() => openModal('search')}
+                className="hidden h-9 items-center gap-2 rounded-sm border border-gray-300 pl-4 pr-20 text-base font-medium text-gray-300 transition duration-150 hover:border-gray-400 hover:text-gray-500 sm:flex"
+                aria-label="Search"
+              >
+                <SearchIcon size={20} className="text-gray-400" />{' '}
+                <span>Search</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => openModal('search')}
+                className="cursor-pointer mr-2.5"
+                aria-label="Search"
+              >
+                <SearchIcon size={20} className="text-black" />{' '}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => openModal('search')}
@@ -153,12 +189,33 @@ function Navbar({ setOpenFav, openFav }) {
               icon={Handbag}
               onClick={() => openModal('bag')}
             />
-            <a
-              className="hidden h-10 px-3 text-sm font-semibold uppercase text-black transition duration-150 hover:bg-gray-100 md:flex md:items-center"
-              href="#"
-            >
-              Login
-            </a>
+            {user ? (
+              <>
+                <div
+                  className="hidden h-10 items-center gap-2 px-2 text-sm font-semibold text-black md:flex"
+                  aria-label={`Signed in as ${displayName}`}
+                >
+                  <span className="grid size-8 place-items-center rounded-full bg-black text-sm font-bold text-white">
+                    {userInitial}
+                  </span>
+                  <span className="max-w-28 truncate">{displayName}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="hidden h-10 items-center gap-1.5 px-3 text-sm font-semibold uppercase text-black transition duration-150 hover:bg-gray-100 md:flex"
+                >
+                  <LogOut size={17} strokeWidth={1.8} />
+                </button>
+              </>
+            ) : (
+              <Link
+                className="hidden h-10 px-3 text-sm font-semibold uppercase text-black transition duration-150 hover:bg-gray-100 md:flex md:items-center"
+                to="/login"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </nav>
       </header>

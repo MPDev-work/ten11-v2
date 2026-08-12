@@ -1,13 +1,54 @@
-// import { a } from 'react-router-dom';
-// import Login from './Login';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../../lib/firebaseClient';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 function RegisterPage() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  async function handleRegister() {
+    if (password !== confirmPassword) {
+      window.alert('Passwords do not match.');
+      return;
+    }
+
+    if (password.length < 6) {
+      window.alert('Password must be at least 6 characters.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const credential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await updateProfile(credential.user, {
+        displayName: `${firstName} ${lastName}`.trim(),
+      });
+      navigate('/');
+    } catch (authError) {
+      console.error('Firebase registration error:', authError);
+      window.alert(authError.message.replace('Firebase: ', ''));
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <section className="bg-[#f2f2f6] w-screen min-h-screen overflow-x-hidden scroll-smooth pb-12">
       <nav className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-5 bg-white">
-        <a href="/" className="text-black no-underline">
+        <Link to="/" className="text-black no-underline">
           <i className="bi bi-arrow-bar-left"></i> Back to home page
-        </a>
+        </Link>
 
         <a href="register.html">
           <h1 className="uppercase text-[40px] font-bold tracking-[-2px] cursor-pointer">
@@ -19,7 +60,7 @@ function RegisterPage() {
       </nav>
 
       <section className="flex flex-col items-center justify-center mt-[100px] gap-5">
-        <div className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
+        <form className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
           <h3 className="text-[24px] mb-1">Customer information</h3>
 
           <div className="w-full h-[1px] mt-[5px] mb-[10px] bg-[repeating-linear-gradient(to_right,#d6d6d6_0px,#d6d6d6_4px,transparent_5px,transparent_8px)]"></div>
@@ -32,6 +73,8 @@ function RegisterPage() {
               <input
                 type="text"
                 placeholder="First name"
+                value={firstName}
+                onChange={(event) => setFirstName(event.target.value)}
                 className="w-full h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
               />
             </div>
@@ -43,24 +86,22 @@ function RegisterPage() {
               <input
                 type="text"
                 placeholder="Last name"
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
                 className="w-full h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
               />
             </div>
           </div>
 
-          <form
-            action={'#'}
-            method="POST"
-            className="flex flex-col items-center gap-2.5"
-          >
-            <label className="w-full text-left">
+          <div className="flex flex-col items-center gap-2.5">
+            {/* <label className="w-full text-left">
               .Phone number <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               placeholder="Phone number"
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
-            />
+            /> */}
 
             <label className="w-full text-left">
               .Email <span className="text-red-500">*</span>
@@ -68,6 +109,8 @@ function RegisterPage() {
             <input
               type="email"
               placeholder="example@gmail.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
 
@@ -77,6 +120,8 @@ function RegisterPage() {
             <input
               type="password"
               placeholder="Create password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
 
@@ -86,12 +131,14 @@ function RegisterPage() {
             <input
               type="password"
               placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
-          </form>
-        </div>
+          </div>
+        </form>
 
-        <div className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
+        {/* <div className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
           <h3 className="text-[24px] mb-1">Customer Address</h3>
 
           <div className="w-full h-[1px] mt-[5px] mb-[10px] bg-[repeating-linear-gradient(to_right,#d6d6d6_0px,#d6d6d6_4px,transparent_5px,transparent_8px)]"></div>
@@ -115,10 +162,16 @@ function RegisterPage() {
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
           </div>
-        </div>
+        </div> */}
 
-        <button className="w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer">
-          <i className="bi bi-person-fill"></i> Create Account
+        <button
+          type="button"
+          onClick={handleRegister}
+          disabled={loading}
+          className="w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer"
+        >
+          <i className="bi bi-person-fill"></i>{' '}
+          {loading ? 'Creating Account...' : 'Create Account'}
         </button>
 
         <div className="relative w-[640px] h-[20px] mt-5">
@@ -141,9 +194,9 @@ function RegisterPage() {
 
         <h3 className="text-[20px]">
           Have an Account?
-          <a href="/loginPage" className="underline font-semibold">
+          <Link to="/login" className="underline font-semibold">
             Login
-          </a>
+          </Link>
         </h3>
       </section>
     </section>

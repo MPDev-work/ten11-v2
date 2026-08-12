@@ -1,12 +1,36 @@
-// import { a } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../../lib/firebaseClient';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/');
+    } catch (authError) {
+      console.error('Firebase login error:', authError);
+      window.alert(authError.message.replace('Firebase: ', ''));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <section className="bg-[#f2f2f6] w-screen h-screen scroll-smooth pb-12 flex justify-center items-center">
       <nav className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-5 bg-white ">
-        <a href="/" className="text-black no-underline">
+        <Link to="/" className="text-black no-underline">
           <i className="bi bi-arrow-bar-left"></i> Back to home page
-        </a>
+        </Link>
         <a href="login.html">
           <h1 className="uppercase text-[40px] font-bold tracking-[-2px]">
             solis <span className="text-[#d3d3d6] ml-2">skin</span>
@@ -16,8 +40,7 @@ function LoginPage() {
       </nav>
       <section className="flex flex-col items-center justify-center pt-[100px] gap-5">
         <form
-          action={'#'}
-          method="POST"
+          onSubmit={handleLogin}
           className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]"
         >
           <h3 className="text-[24px] mb-1">Enter your information</h3>
@@ -30,6 +53,9 @@ function LoginPage() {
               id="email"
               type="email"
               placeholder="example@gmail.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
               className="w-full h-[50px] bg-[#f2f2f6] text-base rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
             <label
@@ -42,40 +68,26 @@ function LoginPage() {
               id="password"
               type="password"
               placeholder="Enter password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
               className="w-full h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
           </div>
           <button
             type="submit"
+            disabled={loading}
             className="w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer mt-5"
           >
-            <i className="bi bi-person-fill"></i> Login Now
+            <i className="bi bi-person-fill"></i>{' '}
+            {loading ? 'Logging in...' : 'Login Now'}
           </button>
         </form>
-
-        {/* <div className="relative w-[640px] h-[20px] mt-5">
-          <div className="w-full h-[1px] bg-gray-300 opacity-50"></div>
-
-          <p className="absolute left-1/2 -translate-x-1/2 bottom-1/2 px-2 bg-greyTint text-[18px]">
-            or
-          </p>
-        </div>
-        <div className="flex flex-col items-center gap-2.5">
-          <div className="relative w-[640px] h-[50px] bg-white rounded-full flex items-center justify-center text-[20px] cursor-pointer">
-            <i className="bi bi-google absolute left-2.5 text-[30px] flex justify-center items-center"></i>
-            <p>Login with Google</p>
-          </div>
-
-          <div className="relative w-[640px] h-[50px] bg-white rounded-full flex items-center justify-center text-[20px] cursor-pointer">
-            <i className="bi bi-facebook absolute left-2.5 text-[30px] flex justify-center items-center"></i>
-            <p>Login with Facebook</p>
-          </div>
-        </div> */}
         <h3 className="text-[20px]">
           Don't Have an Account?{' '}
-          <a href="/registerPage" className="underline font-semibold">
+          <Link to="/register" className="underline font-semibold">
             Register
-          </a>
+          </Link>
         </h3>
       </section>
     </section>
