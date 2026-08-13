@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../../lib/firebaseClient';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth, db, rtdb } from '../../lib/firebaseClient';
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  updateProfile,
+} from 'firebase/auth';
+import { ref, set } from 'firebase/database';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 function RegisterPage() {
   const [firstName, setFirstName] = useState('');
@@ -13,7 +19,8 @@ function RegisterPage() {
 
   const navigate = useNavigate();
 
-  async function handleRegister() {
+  async function handleRegister(event) {
+    event.preventDefault();
     if (password !== confirmPassword) {
       window.alert('Passwords do not match.');
       return;
@@ -26,8 +33,9 @@ function RegisterPage() {
 
     setLoading(true);
 
+    let credential;
     try {
-      const credential = await createUserWithEmailAndPassword(
+      credential = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
@@ -35,10 +43,36 @@ function RegisterPage() {
       await updateProfile(credential.user, {
         displayName: `${firstName} ${lastName}`.trim(),
       });
+      // Ensures Realtime Database receives the new sign-in token before its rules run.
+      await credential.user.getIdToken();
+      await set(ref(rtdb, `users/${credential.user.uid}`), {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        displayName: `${firstName} ${lastName}`.trim(),
+        email: credential.user.email,
+        role: 'client',
+        createdAt: new Date().toISOString(),
+      });
+      await setDoc(doc(db, 'customers', credential.user.uid), {
+        name: `${firstName} ${lastName}`.trim(),
+        email: credential.user.email,
+        createdAt: serverTimestamp(),
+      });
       navigate('/');
     } catch (authError) {
       console.error('Firebase registration error:', authError);
-      window.alert(authError.message.replace('Firebase: ', ''));
+      if (credential?.user) {
+        try {
+          await deleteUser(credential.user);
+        } catch {
+          // The original error is the useful one to show to the customer.
+        }
+      }
+      window.alert(
+        authError.code === 'PERMISSION_DENIED'
+          ? 'Your Realtime Database rules are blocking registration. Publish database.rules.json in the Firebase console, then try again.'
+          : authError.message.replace('Firebase: ', ''),
+      );
     } finally {
       setLoading(false);
     }
@@ -60,7 +94,10 @@ function RegisterPage() {
       </nav>
 
       <section className="flex flex-col items-center justify-center mt-[100px] gap-5">
-        <form className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
+        <form
+          onSubmit={handleRegister}
+          className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]"
+        >
           <h3 className="text-[24px] mb-1">Customer information</h3>
 
           <div className="w-full h-[1px] mt-[5px] mb-[10px] bg-[repeating-linear-gradient(to_right,#d6d6d6_0px,#d6d6d6_4px,transparent_5px,transparent_8px)]"></div>
@@ -75,6 +112,7 @@ function RegisterPage() {
                 placeholder="First name"
                 value={firstName}
                 onChange={(event) => setFirstName(event.target.value)}
+                required
                 className="w-full h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
               />
             </div>
@@ -88,6 +126,7 @@ function RegisterPage() {
                 placeholder="Last name"
                 value={lastName}
                 onChange={(event) => setLastName(event.target.value)}
+                required
                 className="w-full h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
               />
             </div>
@@ -111,6 +150,7 @@ function RegisterPage() {
               placeholder="example@gmail.com"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              required
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
 
@@ -122,6 +162,7 @@ function RegisterPage() {
               placeholder="Create password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              required
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
 
@@ -133,9 +174,18 @@ function RegisterPage() {
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
+              required
               className="w-[600px] h-[50px] bg-[#f2f2f6] text-[16px] rounded-full px-4 outline-transparent focus:outline-1 focus:outline-black"
             />
           </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer mt-5"
+          >
+            <i className="bi bi-person-fill"></i>{' '}
+            {loading ? 'Creating Account...' : 'Create Account'}
+          </button>
         </form>
 
         {/* <div className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]">
@@ -163,16 +213,6 @@ function RegisterPage() {
             />
           </div>
         </div> */}
-
-        <button
-          type="button"
-          onClick={handleRegister}
-          disabled={loading}
-          className="w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer"
-        >
-          <i className="bi bi-person-fill"></i>{' '}
-          {loading ? 'Creating Account...' : 'Create Account'}
-        </button>
 
         <div className="relative w-[640px] h-[20px] mt-5">
           <div className="w-full h-[1px] bg-gray-300 opacity-50"></div>

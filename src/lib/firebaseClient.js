@@ -1,17 +1,20 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAtfrKtQw6GkeAdNbR4ALbvcu6LilRD6Fw',
-  authDomain: 'react-part2.firebaseapp.com',
-  projectId: 'react-part2',
-  storageBucket: 'react-part2.firebasestorage.app',
-  messagingSenderId: '1018595800466',
-  appId: '1:1018595800466:web:4038bece4994f9c5e7fd4b',
-  measurementId: 'G-KS5P4VKGQM',
+  apiKey: 'AIzaSyCDv-pehVf5pf1j6QTMFjoSqDm5kOqG77M',
+  authDomain: 'ten11-6f089.firebaseapp.com',
+  databaseURL:
+    'https://ten11-6f089-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'ten11-6f089',
+  storageBucket: 'ten11-6f089.firebasestorage.app',
+  messagingSenderId: '696345781473',
+  appId: '1:696345781473:web:ee44cf67c075fe1043c3a0',
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const rtdb = getDatabase(app);

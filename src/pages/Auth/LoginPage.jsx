@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../../lib/firebaseClient';
+import { auth, rtdb } from '../../lib/firebaseClient';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { get, ref } from 'firebase/database';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,8 +16,19 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const token = await credential.user.getIdTokenResult();
+      let role = token.claims.role;
+
+      if (!role) {
+        const profile = await get(ref(rtdb, `users/${credential.user.uid}`));
+        role = profile.exists() ? profile.val().role || profile.val().roles : '';
+      }
+
+      const isAdmin = Array.isArray(role)
+        ? role.some((item) => String(item).toLowerCase() === 'admin')
+        : String(role).toLowerCase() === 'admin';
+      navigate(isAdmin || token.claims.admin === true ? '/admin' : '/');
     } catch (authError) {
       console.error('Firebase login error:', authError);
       window.alert(authError.message.replace('Firebase: ', ''));

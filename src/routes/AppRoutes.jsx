@@ -7,6 +7,7 @@ import RegisterPage from '../pages/Auth/RegisterPage';
 import Details from '../pages/client/Details/Details';
 import IndexPage from '../pages/client/Home/IndexPage';
 import Men from '../pages/client/Product/Men';
+import AdminDashboard from '../pages/admin/AdminDashboard';
 
 function StoreLayout() {
   const [openFav, setOpenFav] = useState(false);
@@ -35,6 +36,7 @@ function AppRoutes() {
       <Route path="loginPage" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="registerPage" element={<RegisterPage />} />
+      <Route path="admin/*" element={<AdminDashboard />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
