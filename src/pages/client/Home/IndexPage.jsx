@@ -8,6 +8,7 @@ import { ImageData } from '../../../data/sliders';
 import { ChevronRight } from 'lucide-react';
 import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Promotion() {
   return (
@@ -52,8 +53,9 @@ function Brand() {
       >
         {brandData.map((brand) => {
           return (
-            <div
+            <Link
               key={brand.id}
+              to={`/brands/${brand.link.slice(1)}`}
               className="h-[200px] w-[200px] mr-10 flex justify-center items-center"
             >
               <img
@@ -61,7 +63,7 @@ function Brand() {
                 className="w-full h-full object-contain"
                 src={brand.src}
               />
-            </div>
+            </Link>
           );
         })}
       </div>

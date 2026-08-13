@@ -1,42 +1,5 @@
-import Filter from '../filter/Filter.jsx';
-
-function FilterBar({ active, product, newIn }) {
-  function getItems(storeID) {
-    return product.filter((brand) => brand.storeID === storeID);
-  }
-
-  const brandData = [
-    {
-      id: 1,
-      name: 'Ten11',
-      items: getItems('ten11'),
-    },
-    {
-      id: 2,
-      name: 'Zando',
-      items: getItems('zando'),
-    },
-    {
-      id: 3,
-      name: 'Routine',
-      items: getItems('routine'),
-    },
-    {
-      id: 4,
-      name: 'Gatoni',
-      items: getItems('gatoni'),
-    },
-    {
-      id: 5,
-      name: '361',
-      items: getItems('361'),
-    },
-    {
-      id: 6,
-      name: 'boo boo',
-      items: getItems('boo boo'),
-    },
-  ];
+function FilterBar({ active, products = [], selectedBrand, onBrandChange }) {
+  const brands = [...new Set(products.map((product) => product.storeID).filter(Boolean))];
 
   return (
     <div
@@ -45,16 +8,27 @@ function FilterBar({ active, product, newIn }) {
     >
       <div className="h-full flex items-center gap-2.5">
         <div className="flex items-center gap-1">
-          <p>New in ({newIn} items)</p>
+          <p>{products.length} items</p>
         </div>
-        <button className="cursor-pointer h-8 px-2.5 border-2 border-black rounded-lg flex items-center">
-          Filter
+        <button
+          type="button"
+          onClick={() => onBrandChange('')}
+          className={`cursor-pointer h-8 px-2.5 border rounded-lg flex items-center ${!selectedBrand ? 'border-black bg-black text-white' : 'border-gray-300'}`}
+        >
+          All brands
         </button>
       </div>
       <div className="h-full w-max flex items-center gap-4 px-2.5">
-        {brandData.map((ele) => {
-          return <Filter key={ele.id} props={ele} />;
-        })}
+        {brands.map((brand) => (
+          <button
+            type="button"
+            key={brand}
+            onClick={() => onBrandChange(brand)}
+            className={`cursor-pointer h-8 whitespace-nowrap px-2.5 border rounded-lg text-base font-medium transition ${selectedBrand === brand ? 'border-black bg-black text-white' : 'border-gray-300 hover:border-black'}`}
+          >
+            {brand} ({products.filter((product) => product.storeID === brand).length})
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Card from '../../../components/product/Card';
 import { layoutData } from '../../../data/layoutData';
+import { useShop } from '../../../hooks/useShop';
 
 const defaultProduct = {
   storeID: 'zando',
@@ -10,6 +11,7 @@ const defaultProduct = {
 };
 
 function Details() {
+  const { addToCart, isFavorite, toggleFavorite } = useShop();
   const { productId } = useParams();
   const { state } = useLocation();
   const fallbackProduct = layoutData
@@ -18,16 +20,11 @@ function Details() {
   const product = { ...defaultProduct, ...fallbackProduct, ...state?.product };
   const [qty, setQty] = useState(1);
   const [isSize, setIsSize] = useState(product.size[0]);
-  const colorCount = product.colors.length;
+  const colorCount = (product.colors || []).length;
   const hasDiscount = product.dis > 0;
   const displayPrice = hasDiscount
     ? product.price - (product.price * product.dis) / 100
     : product.price;
-
-  useEffect(() => {
-    setQty(1);
-    setIsSize(product.size[0]);
-  }, [product.id, product.size]);
 
   const storeName =
     product.storeID.slice(0, 1).toUpperCase() + product.storeID.slice(1);
@@ -133,9 +130,23 @@ function Details() {
               Stock available {product.stock}
             </p>
           )}
-          <button className="cursor-pointer w-3/4 h-12 flex justify-center items-center rounded-full bg-black text-white mt-2.5 transition duration-100 hover:bg-black/80 active:bg-black/50">
-            Add to card
-          </button>
+          <div className="flex w-3/4 gap-2.5">
+            <button
+              type="button"
+              onClick={() => addToCart(product, qty, isSize)}
+              className="cursor-pointer h-12 flex-1 rounded-full bg-black text-white transition duration-100 hover:bg-black/80 active:bg-black/50"
+            >
+              Add to cart
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleFavorite(product)}
+              aria-label="Toggle favorite"
+              className="grid h-12 w-12 place-items-center rounded-full border border-black"
+              >
+              {isFavorite(product.id) ? '♥' : '♡'}
+            </button>
+          </div>
         </div>
       </div>
       <Suggest currentProduct={product} />

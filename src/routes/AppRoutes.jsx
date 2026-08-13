@@ -10,6 +10,9 @@ import Men from '../pages/client/Product/Men';
 import Women from '../pages/client/Product/Women';
 import Kids from '../pages/client/Product/Kids';
 import Accessories from '../pages/client/Product/Accessories';
+import ZHome from '../pages/client/Product/ZHome';
+import Brands from '../pages/client/brands/Brands';
+import BrandPage from '../pages/client/brands/brandPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 
 function StoreLayout() {
@@ -35,6 +38,9 @@ function AppRoutes() {
         <Route path="women" element={<Women />} />
         <Route path="kids" element={<Kids />} />
         <Route path="accessories" element={<Accessories />} />
+        <Route path="z.home" element={<ZHome />} />
+        <Route path="brands" element={<Brands />} />
+        <Route path="brands/:brandSlug" element={<BrandPage />} />
         <Route path="products/:productId" element={<Details />} />
       </Route>
 

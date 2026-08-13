@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { brandData } from '../../data/brands';
 import { auth } from '../../lib/firebaseClient';
+import { useProducts } from '../../hooks/useProducts';
+import { useShop } from '../../hooks/useShop';
 import ActionModal from '../common/ActionModal';
 
 const panelContent = {
@@ -58,6 +60,14 @@ function Navbar({ setOpenFav, openFav }) {
   const [user, setUser] = useState(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const { products } = useProducts();
+  const {
+    cart,
+    favorites,
+    removeFromCart,
+    updateCartQuantity,
+    toggleFavorite,
+  } = useShop();
   const isOpen = activeModal !== null || openFav;
 
   useEffect(() => {
@@ -115,6 +125,22 @@ function Navbar({ setOpenFav, openFav }) {
   const username = user?.firstname || user?.email?.split('@')[0] || '';
   const displayName = username.slice(0, 1).toUpperCase() + username.slice(1);
   const userInitial = username.charAt(0).toUpperCase();
+  const searchResults = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    if (!term) return [];
+    return products
+      .filter((product) =>
+        [product.title, product.storeID, product.category]
+          .filter(Boolean)
+          .some((value) => String(value).toLowerCase().includes(term)),
+      )
+      .slice(0, 8);
+  }, [products, query]);
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartTotal = cart.reduce((total, item) => {
+    const price = Number(item.price || 0) * (1 - Number(item.dis || 0) / 100);
+    return total + price * item.quantity;
+  }, 0);
 
   const panel =
     activeModal && activeModal !== 'search'
@@ -127,16 +153,18 @@ function Navbar({ setOpenFav, openFav }) {
       <header className="fixed inset-x-0 top-0 z-[999] bg-white">
         <nav className="relative flex h-12 items-center justify-between pl-5 pr-1">
           <ul className="hidden items-center gap-6 xl:flex">
-            {['men', 'women', 'kids', 'accessories', 'z.home'].map((item) => (
-              <li key={item}>
-                <Link
-                  to={item === 'z.home' ? '/z.home' : `/${item}`}
-                  className="text-base font-semibold uppercase text-black transition duration-150 hover:text-gray-500"
-                >
-                  {item}
-                </Link>
-              </li>
-            ))}
+            {['men', 'women', 'kids', 'accessories', 'z.home', 'brands'].map(
+              (item) => (
+                <li key={item}>
+                  <Link
+                    to={item === 'z.home' ? '/z.home' : `/${item}`}
+                    className="text-base font-semibold uppercase text-black transition duration-150 hover:text-gray-500"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ),
+            )}
           </ul>
           <Link
             to="/"
@@ -176,6 +204,7 @@ function Navbar({ setOpenFav, openFav }) {
             <HeaderButton
               label="Open favorites"
               icon={Heart}
+              badge={favorites.length > 0}
               onClick={openFavorites}
             />
             <HeaderButton
@@ -187,6 +216,7 @@ function Navbar({ setOpenFav, openFav }) {
             <HeaderButton
               label="Open shopping bag"
               icon={Handbag}
+              badge={cartCount > 0}
               onClick={() => openModal('bag')}
             />
             {user ? (
@@ -246,6 +276,42 @@ function Navbar({ setOpenFav, openFav }) {
             </button>
           </div>
           <div className="pt-6 pb-3">
+            {query.trim() && (
+              <div className="mb-6">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  Products
+                </p>
+                {searchResults.length ? (
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {searchResults.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/products/${product.id}`}
+                        state={{ product }}
+                        onClick={closeModal}
+                        className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-100"
+                      >
+                        <img
+                          src={product.src || product.imageUrl}
+                          alt=""
+                          className="h-14 w-12 rounded-lg object-cover"
+                        />
+                        <span className="min-w-0">
+                          <b className="block truncate">{product.title}</b>
+                          <small className="text-slate-500">
+                            {product.storeID} · US ${product.price}
+                          </small>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    No matching products found.
+                  </p>
+                )}
+              </div>
+            )}
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
               Popular brands
             </p>
@@ -273,26 +339,157 @@ function Navbar({ setOpenFav, openFav }) {
         onClose={closeModal}
         title={panel.title}
       >
-        <div className="flex flex-1 flex-col items-center justify-center px-8 pb-20 text-center">
-          <div className="mb-6 grid size-16 place-items-center rounded-full bg-slate-100 text-slate-900">
-            <PanelIcon size={28} strokeWidth={1.5} />
+        {openFav ? (
+          <div className="flex flex-1 flex-col overflow-y-auto p-5">
+            {favorites.length ? (
+              favorites.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center gap-3 border-b py-3"
+                >
+                  <Link
+                    to={`/products/${product.id}`}
+                    state={{ product }}
+                    onClick={closeModal}
+                  >
+                    <img
+                      src={product.src || product.imageUrl}
+                      alt=""
+                      className="h-20 w-16 object-cover"
+                    />
+                  </Link>
+                  <div className="min-w-0 flex-1">
+                    <b className="block truncate">{product.title}</b>
+                    <p className="text-sm text-slate-500">
+                      US ${product.price}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleFavorite(product)}
+                    className="text-sm underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))
+            ) : (
+              <EmptyPanel
+                icon={Heart}
+                title="Save the pieces you love"
+                detail="Your favorite products will appear here."
+              />
+            )}
           </div>
-          <h3 className="text-xl font-semibold tracking-tight text-slate-950">
-            {panel.heading}
-          </h3>
-          <p className="mt-3 max-w-xs text-sm leading-6 text-slate-500">
-            {panel.detail}
-          </p>
-          <button
-            type="button"
-            onClick={closeModal}
-            className="mt-8 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
-          >
-            Continue shopping
-          </button>
-        </div>
+        ) : activeModal === 'bag' ? (
+          <div className="flex flex-1 flex-col overflow-y-auto p-5">
+            {cart.length ? (
+              <>
+                {cart.map((item) => (
+                  <div
+                    key={`${item.id}-${item.size}`}
+                    className="flex items-center gap-3 border-b py-3"
+                  >
+                    <img
+                      src={item.src || item.imageUrl}
+                      alt=""
+                      className="h-20 w-16 object-cover"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <b className="block truncate">{item.title}</b>
+                      <p className="text-sm text-slate-500">
+                        {item.size && `Size ${item.size} · `}US ${item.price}
+                      </p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateCartQuantity(
+                              item.id,
+                              item.size,
+                              item.quantity - 1,
+                            )
+                          }
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateCartQuantity(
+                              item.id,
+                              item.size,
+                              item.quantity + 1,
+                            )
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeFromCart(item.id, item.size)}
+                      className="text-sm underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <div className="mt-auto pt-5">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span>US ${cartTotal.toFixed(2)}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-4 w-full rounded-full bg-black py-3 text-white"
+                  >
+                    Checkout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyPanel
+                icon={Handbag}
+                title="Your bag is empty"
+                detail="Add a product to begin your order."
+              />
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center px-8 pb-20 text-center">
+            <div className="mb-6 grid size-16 place-items-center rounded-full bg-slate-100 text-slate-900">
+              <PanelIcon size={28} strokeWidth={1.5} />
+            </div>
+            <h3 className="text-xl font-semibold tracking-tight text-slate-950">
+              {panel.heading}
+            </h3>
+            <p className="mt-3 max-w-xs text-sm leading-6 text-slate-500">
+              {panel.detail}
+            </p>
+            <button
+              type="button"
+              onClick={closeModal}
+              className="mt-8 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+            >
+              Continue shopping
+            </button>
+          </div>
+        )}
       </ActionModal>
     </>
+  );
+}
+
+function EmptyPanel({ icon: Icon, title, detail }) {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center text-center">
+      <Icon size={30} />
+      <h3 className="mt-4 text-xl font-semibold">{title}</h3>
+      <p className="mt-2 text-sm text-slate-500">{detail}</p>
+    </div>
   );
 }
 

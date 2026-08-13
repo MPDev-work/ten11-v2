@@ -1,7 +1,9 @@
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useShop } from '../../hooks/useShop';
 
 function Card({ product }) {
+  const { isFavorite, toggleFavorite } = useShop();
   const getDisc = (price, dis) => {
     return (price - (price * dis) / 100).toFixed(2);
   };
@@ -37,8 +39,13 @@ function Card({ product }) {
               US ${product.price}
             </h1>
           </div>
-          <button className="cursor-pointer h-[18px] w-[18px] felx justify-center items-center">
-            <Heart className="w-full h-full object-contain" />
+          <button
+            type="button"
+            aria-label={isFavorite(product.id) ? 'Remove from favorites' : 'Add to favorites'}
+            onClick={() => toggleFavorite(product)}
+            className="cursor-pointer h-[18px] w-[18px] flex justify-center items-center"
+          >
+            <Heart className="w-full h-full object-contain" fill={isFavorite(product.id) ? 'currentColor' : 'none'} />
           </button>
         </div>
         <p className="text-base w-full overflow-hidden text-nowrap text-ellipsis">
