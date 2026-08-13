@@ -15,7 +15,8 @@ function Card({ product }) {
         <img
           loading="lazy"
           className="w-full h-max object-cover"
-          src={product.src}
+          src={product.src || product.imageUrl}
+          alt={product.title}
         />
       </Link>
       <div className="w-full flex flex-col gap2.5 px-3">
@@ -40,9 +41,11 @@ function Card({ product }) {
             <Heart className="w-full h-full object-contain" />
           </button>
         </div>
-        <p className="text-base">{product.title}</p>
+        <p className="text-base w-full overflow-hidden text-nowrap text-ellipsis">
+          {product.title}
+        </p>
         <div className="flex gap-2.5 mt-2.5">
-          {product.colors.map((color) => {
+          {(product.colors || []).map((color) => {
             return (
               <div
                 key={color}

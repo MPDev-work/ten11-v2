@@ -33,7 +33,6 @@ import {
   PlusCircle,
   Settings,
   ShoppingBag,
-  Tag,
   Trash2,
   UserCog,
   Users,
@@ -50,7 +49,6 @@ const navGroups = [
       ['/admin/orders', 'Orders', ShoppingBag],
       ['/admin/products', 'All products', Box],
       ['/admin/products/new', 'Add product', PackagePlus],
-      ['/admin/categories', 'Categories', Tag],
       ['/admin/customers', 'Customers', Users],
     ],
   ],
@@ -105,6 +103,7 @@ const emptyOrder = {
 };
 const button =
   'inline-flex items-center justify-center gap-1.5 rounded-full bg-black px-5 py-3 text-sm text-white transition hover:bg-slate-700 disabled:opacity-60';
+
 const input =
   'mt-2 box-border w-full rounded-full bg-white px-4 py-3 outline-none ring-0 focus:ring-2 focus:ring-slate-300';
 
@@ -131,7 +130,7 @@ function AdminLayout({ children }) {
   const navigate = useNavigate();
   const settings = useCollection('settings');
   const storeName =
-    settings.find((item) => item.id === 'store')?.storeName || 'Solis Skin';
+    settings.find((item) => item.id === 'store')?.storeName || 'ten11';
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
@@ -165,7 +164,7 @@ function AdminLayout({ children }) {
           </span>
           <span className="flex flex-col text-sm">
             <b>{auth.currentUser?.displayName || 'Admin'}</b>
-            <small className="text-blue-500">administrator</small>
+            <small className="text-blue-500">Admin</small>
           </span>
         </div>
       </header>
@@ -692,124 +691,6 @@ function ProductForm() {
   );
 }
 
-function Categories() {
-  const categories = useCollection('categories');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [editing, setEditing] = useState(null);
-  const save = async (event) => {
-    event.preventDefault();
-    if (!name.trim()) return;
-    const payload = {
-      name: name.trim(),
-      description: description.trim(),
-      updatedAt: serverTimestamp(),
-    };
-    editing
-      ? await updateDoc(doc(db, 'categories', editing), payload)
-      : await addDoc(collection(db, 'categories'), {
-          ...payload,
-          createdAt: serverTimestamp(),
-        });
-    setName('');
-    setDescription('');
-    setEditing(null);
-  };
-  return (
-    <>
-      <PageHeading
-        eyebrow="Catalogue"
-        title="Skincare categories"
-        description="Create the product groups customers can browse."
-      />
-      <div className="grid gap-5 lg:grid-cols-[360px_1fr]">
-        <form onSubmit={save} className="rounded-[28px] bg-[#f2f2f6] p-5">
-          <h2 className="text-xl font-semibold">
-            {editing ? 'Edit category' : 'Add category'}
-          </h2>
-          <Field className="mt-4" label="Category name">
-            <input
-              className={input}
-              required
-              placeholder="e.g. Cleansers"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Field>
-          <Field className="mt-4" label="Description">
-            <textarea
-              className={`${input} rounded-2xl`}
-              rows="4"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Field>
-          <button className={`${button} mt-5`}>
-            {editing ? 'Save changes' : 'Add category'}
-          </button>
-          {editing && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditing(null);
-                setName('');
-                setDescription('');
-              }}
-              className="ml-3 text-sm text-slate-500"
-            >
-              Cancel
-            </button>
-          )}
-        </form>
-        <div className="overflow-x-auto rounded-[28px] border border-slate-100">
-          <table className="w-full min-w-[500px] text-left text-sm">
-            <thead className="bg-black text-white">
-              <tr>
-                <th className="px-5 py-4">Category</th>
-                <th className="px-5 py-4">Description</th>
-                <th className="px-5 py-4">Products</th>
-                <th className="px-5 py-4" />
-              </tr>
-            </thead>
-            <tbody>
-              {categories.length ? (
-                categories.map((item) => (
-                  <tr className="border-b border-slate-100" key={item.id}>
-                    <td className="px-5 py-4 font-medium">{item.name}</td>
-                    <td className="px-5 py-4 text-slate-500">
-                      {item.description}
-                    </td>
-                    <td className="px-5 py-4">{item.productCount || 0}</td>
-                    <td className="px-5 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <ActionButton
-                          onClick={() => {
-                            setEditing(item.id);
-                            setName(item.name);
-                            setDescription(item.description || '');
-                          }}
-                        >
-                          <Pencil size={17} />
-                        </ActionButton>
-                        <DeleteButton
-                          path={`categories/${item.id}`}
-                          label="Remove this category?"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <Empty colSpan={4}>No categories yet.</Empty>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
 function CrudList({
   collectionName,
   heading,
@@ -1112,7 +993,6 @@ export default function AdminDashboard() {
         <Route path="products" element={<Products />} />
         <Route path="products/new" element={<ProductForm />} />
         <Route path="products/:id" element={<ProductForm />} />
-        <Route path="categories" element={<Categories />} />
         <Route path="customers" element={<Customers />} />
         <Route path="orders" element={<Orders />} />
         <Route path="settings" element={<SettingsPage />} />

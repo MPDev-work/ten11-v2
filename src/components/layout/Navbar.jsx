@@ -130,7 +130,7 @@ function Navbar({ setOpenFav, openFav }) {
             {['men', 'women', 'kids', 'accessories', 'z.home'].map((item) => (
               <li key={item}>
                 <Link
-                  to={item === 'men' ? '/men' : '/'}
+                  to={item === 'z.home' ? '/z.home' : `/${item}`}
                   className="text-base font-semibold uppercase text-black transition duration-150 hover:text-gray-500"
                 >
                   {item}

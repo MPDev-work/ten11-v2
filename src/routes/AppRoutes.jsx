@@ -7,6 +7,9 @@ import RegisterPage from '../pages/Auth/RegisterPage';
 import Details from '../pages/client/Details/Details';
 import IndexPage from '../pages/client/Home/IndexPage';
 import Men from '../pages/client/Product/Men';
+import Women from '../pages/client/Product/Women';
+import Kids from '../pages/client/Product/Kids';
+import Accessories from '../pages/client/Product/Accessories';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 
 function StoreLayout() {
@@ -29,6 +32,9 @@ function AppRoutes() {
       <Route element={<StoreLayout />}>
         <Route index element={<IndexPage />} />
         <Route path="men" element={<Men />} />
+        <Route path="women" element={<Women />} />
+        <Route path="kids" element={<Kids />} />
+        <Route path="accessories" element={<Accessories />} />
         <Route path="products/:productId" element={<Details />} />
       </Route>
 

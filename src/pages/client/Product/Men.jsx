@@ -1,77 +1,40 @@
-import Card from '../../../components/product/Card';
-import FilterBar from '../../../components/filterBar/FilterBar';
-import cardImage from '../../../assets/card/imgi_87_PTAK6547-cr-450x672.jpg';
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import Card from '../../../components/product/Card';
+import { db } from '../../../lib/firebaseClient';
+import FilterBar from '../../../components/filterBar/FilterBar';
+function useProductsByCategory(category, field = 'createdAt') {
+  const [products, setProducts] = useState([]);
 
-const products = [
-  {
-    id: 1,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 25,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 2,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 3,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 4,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 5,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 6,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 7,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-  {
-    id: 8,
-    title: `Relaxed Striped Polo T-Shirt`,
-    src: cardImage,
-    price: 15.59,
-    dis: 50,
-    colors: [`white`, `black`, `gray`],
-  },
-];
+  useEffect(() => {
+    const q = query(
+      collection(db, 'products'),
+      where('category', '==', category),
+      orderBy(field, 'desc'),
+    );
+    return onSnapshot(q, (snapshot) =>
+      setProducts(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))),
+    );
+  }, [category, field]);
+
+  return products;
+}
 
 function Men() {
   const [active, setActive] = useState(true);
+  const products = useProductsByCategory('men');
+  const newIn = products.length;
+
+  // const ten11 = products.filter((ten11) => ten11.storeID === 'ten11');
+  // const countTen11 = products.filter(
+  //   (items) => items.storeID === 'ten11',
+  // ).length;
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -96,11 +59,13 @@ function Men() {
   }, []);
 
   return (
-    <section className="ralative w-screen h-max grid grid-cols-4 grid-flow-row gap-5 px-2.5 mt-34">
-      <FilterBar active={active} />
-      {products.map((product) => {
-        return <Card key={product.id} product={product} />;
-      })}
+    <section className="w-screen px-2.5 mt-26">
+      <FilterBar active={active} newIn={newIn} product={products} />
+      <div className="w-full grid grid-cols-4 gap-5">
+        {products.map((product) => (
+          <Card key={product.id} product={product} />
+        ))}
+      </div>
     </section>
   );
 }
