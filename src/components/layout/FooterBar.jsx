@@ -1,17 +1,19 @@
+import { Link } from 'react-router-dom';
+
 function FooterBar() {
   const CurrentYear = new Date();
   const getCurrentYear = CurrentYear.getFullYear();
 
   return (
     <>
-      <footer className="h-max w-screen flex flex-row justify-evenly items-start bg-gray-100 pt-[50px] mt-[80px] pb-[20px] rounded-tl-[100px] rounded-tr-[100px]">
+      <footer className="h-max w-screen flex flex-row justify-evenly items-start bg-gray-100 pt-12 mt-10 pb-5 rounded-tl-[100px] rounded-tr-[100px]">
         <div className="flex flex-col justify-start items-start gap-4">
-          <a
+          <Link
             className="uppercase tracking-tight leading-6.5 text-4xl font-semibold"
-            href="/"
+            to="/"
           >
             ten11
-          </a>
+          </Link>
           <p className="text-sm w-[260px] text-gray-600">
             Your trusted destination for healthy and glowing skin. 100%
             authentic skincare products.
@@ -57,34 +59,34 @@ function FooterBar() {
           <h1 className="text-2xl font-semibold tracking-tight">Quick link</h1>
           <ul className="list-none flex flex-col justify-start items-start gap-1.5">
             <li>
-              <a className="underline" href="/">
+              <Link className="underline" to="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="/category">
-                Category
-              </a>
+              <Link className="underline" to="/men">
+                Men
+              </Link>
             </li>
             <li>
-              <a className="underline" href="/brand">
-                Brand
-              </a>
+              <Link className="underline" to="/women">
+                Women
+              </Link>
             </li>
             <li>
-              <a className="underline" href="/explore">
-                Explore
-              </a>
+              <Link className="underline" to="/kids">
+                Kids
+              </Link>
             </li>
             <li>
-              <a href="/freeDelivery" className="underline">
-                Free Delivery
-              </a>
+              <Link to="/accessries" className="underline">
+                Accessories
+              </Link>
             </li>
             <li>
-              <a href="/shopAll" className="underline">
-                Shop all
-              </a>
+              <Link to="/brands" className="underline">
+                Brands
+              </Link>
             </li>
           </ul>
         </div>
@@ -94,34 +96,34 @@ function FooterBar() {
           </h1>
           <ul className="list-none flex flex-col justify-start items-start gap-1.5">
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 My Account
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 Order Tracking
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 Shopping Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 Return Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 FAQ
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="underline" href="#">
+              <Link className="underline" to="#">
                 Privacy & Policy
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

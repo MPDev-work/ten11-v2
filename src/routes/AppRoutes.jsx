@@ -11,6 +11,7 @@ import Women from '../pages/client/Product/Women';
 import Kids from '../pages/client/Product/Kids';
 import Accessories from '../pages/client/Product/Accessories';
 import ZHome from '../pages/client/Product/ZHome';
+import ProductPage from '../pages/client/Product/ProductPage';
 import Brands from '../pages/client/brands/Brands';
 import BrandPage from '../pages/client/brands/brandPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -39,6 +40,8 @@ function AppRoutes() {
         <Route path="kids" element={<Kids />} />
         <Route path="accessories" element={<Accessories />} />
         <Route path="z.home" element={<ZHome />} />
+        <Route path="products" element={<ProductPage />} />
+        <Route path="product" element={<ProductPage />} />
         <Route path="brands" element={<Brands />} />
         <Route path="brands/:brandSlug" element={<BrandPage />} />
         <Route path="products/:productId" element={<Details />} />

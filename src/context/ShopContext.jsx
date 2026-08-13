@@ -18,18 +18,18 @@ export function ShopProvider({ children }) {
   const value = useMemo(() => ({
     cart,
     favorites,
-    addToCart(product, quantity = 1, size = '') {
+    addToCart(product, quantity = 1, size = '', color = '') {
       setCart((items) => {
-        const existing = items.find((item) => item.id === product.id && item.size === size);
-        if (existing) return items.map((item) => item.id === product.id && item.size === size ? { ...item, quantity: item.quantity + quantity } : item);
-        return [...items, { ...product, quantity, size }];
+        const existing = items.find((item) => item.id === product.id && item.size === size && item.color === color);
+        if (existing) return items.map((item) => item.id === product.id && item.size === size && item.color === color ? { ...item, quantity: item.quantity + quantity } : item);
+        return [...items, { ...product, quantity, size, color }];
       });
     },
-    updateCartQuantity(id, size, quantity) {
-      setCart((items) => quantity < 1 ? items.filter((item) => item.id !== id || item.size !== size) : items.map((item) => item.id === id && item.size === size ? { ...item, quantity } : item));
+    updateCartQuantity(id, size, color, quantity) {
+      setCart((items) => quantity < 1 ? items.filter((item) => item.id !== id || item.size !== size || item.color !== color) : items.map((item) => item.id === id && item.size === size && item.color === color ? { ...item, quantity } : item));
     },
-    removeFromCart(id, size) {
-      setCart((items) => items.filter((item) => item.id !== id || item.size !== size));
+    removeFromCart(id, size, color) {
+      setCart((items) => items.filter((item) => item.id !== id || item.size !== size || item.color !== color));
     },
     toggleFavorite(product) {
       setFavorites((items) => items.some((item) => item.id === product.id) ? items.filter((item) => item.id !== product.id) : [...items, product]);

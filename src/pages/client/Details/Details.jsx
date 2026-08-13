@@ -3,23 +3,30 @@ import { useLocation, useParams } from 'react-router-dom';
 import Card from '../../../components/product/Card';
 import { layoutData } from '../../../data/layoutData';
 import { useShop } from '../../../hooks/useShop';
-
-const defaultProduct = {
-  storeID: 'zando',
-  size: ['S', 'M', 'L', 'XL', 'XXL'],
-  stock: 20,
-};
+import { useStoreSettings } from '../../../hooks/useStoreSettings';
+import { useProduct } from '../../../hooks/useProduct';
+import { useProducts } from '../../../hooks/useProducts';
 
 function Details() {
   const { addToCart, isFavorite, toggleFavorite } = useShop();
+  const { formatPrice } = useStoreSettings();
   const { productId } = useParams();
   const { state } = useLocation();
+  const { product: firestoreProduct, loading } = useProduct(productId);
   const fallbackProduct = layoutData
     .flatMap((layout) => layout.products)
     .find((item) => String(item.id) === productId);
-  const product = { ...defaultProduct, ...fallbackProduct, ...state?.product };
+  const product = {
+    size: [],
+    colors: [],
+    ...fallbackProduct,
+    ...firestoreProduct,
+    ...state?.product,
+  };
+  const { products } = useProducts(product.category);
   const [qty, setQty] = useState(1);
-  const [isSize, setIsSize] = useState(product.size[0]);
+  const [isSize, setIsSize] = useState(product.size[0] || '');
+  const [isColor, setIsColor] = useState(product.colors[0] || '');
   const colorCount = (product.colors || []).length;
   const hasDiscount = product.dis > 0;
   const displayPrice = hasDiscount
@@ -29,6 +36,22 @@ function Details() {
   const storeName =
     product.storeID.slice(0, 1).toUpperCase() + product.storeID.slice(1);
   const storeDisplayName = storeName.slice(0, 1);
+
+  if (loading && !state?.product && !fallbackProduct) {
+    return (
+      <section className="min-h-screen w-screen pt-20 text-center text-slate-500">
+        Loading product…
+      </section>
+    );
+  }
+
+  if (!state?.product && !fallbackProduct && !firestoreProduct) {
+    return (
+      <section className="min-h-screen w-screen pt-20 text-center text-slate-500">
+        Product not found.
+      </section>
+    );
+  }
 
   return (
     <section className="w-screen h-max flex flex-col mt-12">
@@ -47,7 +70,7 @@ function Details() {
           </div>
           <div className="flex items-start gap-2">
             <h1 className="text-3xl font-bold text-black">
-              US ${displayPrice.toFixed(2)}
+              {formatPrice(displayPrice)}
             </h1>
             {hasDiscount && (
               <>
@@ -58,7 +81,7 @@ function Details() {
                   <p className="uppercase text-sm text-red-500">off</p>
                 </div>
                 <h1 className="text-xl font-medium text-red-500 line-through">
-                  US ${product.price}
+                  {formatPrice(product.price)}
                 </h1>
               </>
             )}
@@ -68,23 +91,17 @@ function Details() {
             <p className="text-lg text-black font-medium">
               {colorCount} colors available
             </p>
-            <div className="grid grid-cols-5 grid-flow-row gap-2.5">
-              <img
-                className="w-full aspect-[3/4] object-cover"
-                src={product.src}
-              />
-              <img
-                className="w-full aspect-[3/4] object-cover"
-                src={product.src}
-              />
-              <img
-                className="w-full aspect-[3/4] object-cover"
-                src={product.src}
-              />
-              <img
-                className="w-full aspect-[3/4] object-cover"
-                src={product.src}
-              />
+            <div className="flex gap-2.5">
+              {product.colors.map((color) => {
+                return (
+                  <ColorSelect
+                    key={color}
+                    color={color}
+                    isColor={isColor}
+                    setIsColor={setIsColor}
+                  />
+                );
+              })}
             </div>
           </div>
           <h1 className="text-xl font-bold">Size</h1>
@@ -133,7 +150,7 @@ function Details() {
           <div className="flex w-3/4 gap-2.5">
             <button
               type="button"
-              onClick={() => addToCart(product, qty, isSize)}
+              onClick={() => addToCart(product, qty, isSize, isColor)}
               className="cursor-pointer h-12 flex-1 rounded-full bg-black text-white transition duration-100 hover:bg-black/80 active:bg-black/50"
             >
               Add to cart
@@ -143,13 +160,13 @@ function Details() {
               onClick={() => toggleFavorite(product)}
               aria-label="Toggle favorite"
               className="grid h-12 w-12 place-items-center rounded-full border border-black"
-              >
+            >
               {isFavorite(product.id) ? '♥' : '♡'}
             </button>
           </div>
         </div>
       </div>
-      <Suggest currentProduct={product} />
+      <Suggest currentProduct={product} products={products} />
     </section>
   );
 }
@@ -169,14 +186,34 @@ function SizeSelect({ props, isSize, onSelect }) {
   );
 }
 
-function Suggest({ currentProduct }) {
-  const suggestions = layoutData
-    .flatMap((layout) => layout.products)
-    .filter((product) => product !== currentProduct)
-    .slice(0, 4);
-
+function ColorSelect({ color, isColor, setIsColor }) {
   return (
-    <div className="w-full h-max flex flex-col items-center gap-8 px-2.5 mt-16">
+    <button
+      type="button"
+      onClick={() => setIsColor(color)}
+      aria-label={`Select ${color}`}
+      style={{
+        backgroundColor: color,
+        outline: isColor === color ? '2px solid #ef4444' : '',
+        outlineOffset: '2px',
+      }}
+      className={`h-7 w-7 cursor-pointer rounded-full ${isColor !== color && color === 'white' ? 'border border-gray-500' : ''}`}
+    />
+  );
+}
+
+function Suggest({ currentProduct, products }) {
+  const suggestions = products.filter(
+    (product) =>
+      product.category === currentProduct.category &&
+      product.id !== currentProduct.id &&
+      product.storeID === currentProduct.storeID,
+  );
+  console.log(suggestions.length);
+  return (
+    <div
+      className={`w-full h-max ${suggestions.length + 1 !== 1 ? `flex` : `hidden`} flex-col items-center gap-8 px-2.5 mt-16 `}
+    >
       <div className="relative w-full flex items-center pl-20">
         <h1 className="absolute z-10 bg-white px-1 uppercase text-3xl font-semibold">
           SIMILAR ITEMS
@@ -184,8 +221,8 @@ function Suggest({ currentProduct }) {
         <hr className="absolute left-0 z-0 w-full border-t-1 border-gray-200" />
       </div>
       <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
-        {suggestions.map((product, index) => (
-          <Card key={`${product.id}-${index}`} product={product} />
+        {suggestions.slice(0, 4).map((product) => (
+          <Card key={`${product.id}`} product={product} />
         ))}
       </div>
     </div>

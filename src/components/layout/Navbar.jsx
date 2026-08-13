@@ -14,6 +14,7 @@ import { brandData } from '../../data/brands';
 import { auth } from '../../lib/firebaseClient';
 import { useProducts } from '../../hooks/useProducts';
 import { useShop } from '../../hooks/useShop';
+import { useStoreSettings } from '../../hooks/useStoreSettings';
 import ActionModal from '../common/ActionModal';
 
 const panelContent = {
@@ -68,6 +69,7 @@ function Navbar({ setOpenFav, openFav }) {
     updateCartQuantity,
     toggleFavorite,
   } = useShop();
+  const { storeName, formatPrice } = useStoreSettings();
   const isOpen = activeModal !== null || openFav;
 
   useEffect(() => {
@@ -170,7 +172,7 @@ function Navbar({ setOpenFav, openFav }) {
             to="/"
             className="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold uppercase text-black"
           >
-            ten11
+            {storeName}
           </Link>
           <div className="ml-auto flex items-center gap-1">
             {!user ? (
@@ -299,7 +301,7 @@ function Navbar({ setOpenFav, openFav }) {
                         <span className="min-w-0">
                           <b className="block truncate">{product.title}</b>
                           <small className="text-slate-500">
-                            {product.storeID} · US ${product.price}
+                            {product.storeID} · {formatPrice(product.price)}
                           </small>
                         </span>
                       </Link>
@@ -361,7 +363,7 @@ function Navbar({ setOpenFav, openFav }) {
                   <div className="min-w-0 flex-1">
                     <b className="block truncate">{product.title}</b>
                     <p className="text-sm text-slate-500">
-                      US ${product.price}
+                      {formatPrice(product.price)}
                     </p>
                   </div>
                   <button
@@ -387,7 +389,7 @@ function Navbar({ setOpenFav, openFav }) {
               <>
                 {cart.map((item) => (
                   <div
-                    key={`${item.id}-${item.size}`}
+                    key={`${item.id}-${item.size}-${item.color}`}
                     className="flex items-center gap-3 border-b py-3"
                   >
                     <img
@@ -398,7 +400,9 @@ function Navbar({ setOpenFav, openFav }) {
                     <div className="min-w-0 flex-1">
                       <b className="block truncate">{item.title}</b>
                       <p className="text-sm text-slate-500">
-                        {item.size && `Size ${item.size} · `}US ${item.price}
+                        {item.size && `Size ${item.size} · `}
+                        {item.color && `Color ${item.color} · `}
+                        {formatPrice(item.price)}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
                         <button
@@ -407,6 +411,7 @@ function Navbar({ setOpenFav, openFav }) {
                             updateCartQuantity(
                               item.id,
                               item.size,
+                              item.color,
                               item.quantity - 1,
                             )
                           }
@@ -420,6 +425,7 @@ function Navbar({ setOpenFav, openFav }) {
                             updateCartQuantity(
                               item.id,
                               item.size,
+                              item.color,
                               item.quantity + 1,
                             )
                           }
@@ -430,7 +436,7 @@ function Navbar({ setOpenFav, openFav }) {
                     </div>
                     <button
                       type="button"
-                      onClick={() => removeFromCart(item.id, item.size)}
+                      onClick={() => removeFromCart(item.id, item.size, item.color)}
                       className="text-sm underline"
                     >
                       Remove
@@ -440,7 +446,7 @@ function Navbar({ setOpenFav, openFav }) {
                 <div className="mt-auto pt-5">
                   <div className="flex justify-between font-semibold">
                     <span>Total</span>
-                    <span>US ${cartTotal.toFixed(2)}</span>
+                    <span>{formatPrice(cartTotal)}</span>
                   </div>
                   <button
                     type="button"

@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { auth, db } from '../../lib/firebaseClient';
 import { brandData } from '../../data/brands';
+import { useStoreSettings } from '../../hooks/useStoreSettings';
 
 const navGroups = [
   [
@@ -128,9 +129,7 @@ function AdminLayout({ children }) {
   const [loggingOut, setLoggingOut] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const settings = useCollection('settings');
-  const storeName =
-    settings.find((item) => item.id === 'store')?.storeName || 'ten11';
+  const { storeName } = useStoreSettings();
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
@@ -189,15 +188,17 @@ function AdminLayout({ children }) {
             </div>
           </section>
         ))}
-        <button
-          type="button"
-          disabled={loggingOut}
-          onClick={handleLogout}
-          className="flex h-10 w-full items-center gap-3 rounded-[30px] px-3 text-sm text-slate-500 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <LogOut size={17} />
-          {loggingOut ? 'Logging out…' : 'Log out'}
-        </button>
+        <div className="w-full p-1.5 bg-white rounded-full">
+          <button
+            type="button"
+            disabled={loggingOut}
+            onClick={handleLogout}
+            className="flex h-10 w-full items-center gap-3 rounded-[30px] px-3 text-sm text-slate-500 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <LogOut size={17} />
+            {loggingOut ? 'Logging out…' : 'Log out'}
+          </button>
+        </div>
       </aside>
       <div className="fixed top-16 right-0 h-screen w-[calc(100vw-256px)] overflow-scroll bg-white pl-5 pr-2.5 pt-5 pb-20 rounded-tl-4xl">
         <main className="relative z-0 h-max w-full overflow-y-scroll scrollbar-none">
@@ -221,7 +222,8 @@ function PageHeading({ eyebrow, title, description, action }) {
   );
 }
 function Money({ value }) {
-  return <>${Number(value || 0).toFixed(2)}</>;
+  const { formatPrice } = useStoreSettings();
+  return <>{formatPrice(value)}</>;
 }
 function Empty({ colSpan, children }) {
   return (
@@ -490,6 +492,7 @@ function ProductForm() {
   const products = useCollection('products');
   const [form, setForm] = useState(emptyProduct);
   const [saving, setSaving] = useState(false);
+  const { currency } = useStoreSettings();
   const editing = id && id !== 'new';
   const existing = products.find((item) => item.id === id);
   useEffect(() => {
@@ -581,7 +584,7 @@ function ProductForm() {
               onChange={(e) => update('title', e.target.value)}
             />
           </Field>
-          <Field label="Price (USD) *">
+          <Field label={`Price (${currency}) *`}>
             <input
               className={input}
               required

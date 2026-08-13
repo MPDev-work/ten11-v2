@@ -1,14 +1,14 @@
 import promotion from '../../../assets/promotion/imgi_2_11Years_Main_ZANDO (2160x1066).jpg';
-import ProductLayout from '../../../components/layout/ProductLayout';
+// import ProductLayout from '../../../components/layout/ProductLayout';
 import GridLayout from '../../../components/layout/GridLayout';
-
-import { layoutData } from '../../../data/layoutData';
 import { brandData } from '../../../data/brands';
 import { ImageData } from '../../../data/sliders';
 import { ChevronRight } from 'lucide-react';
 import { ChevronLeft } from 'lucide-react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Card from '../../../components/product/Card';
+import { useAllProducts } from '../../../hooks/useAllProduct';
+import { useState } from 'react';
 
 function Promotion() {
   return (
@@ -77,17 +77,17 @@ function ImageSlider() {
       <div className="animate-slider h-full w-max flex justify-start items-center">
         {ImageData.map((banner) => {
           return (
-            <a
-              href="#"
+            <Link
+              to={'brands/' + banner.link}
               key={banner.id}
-              className="w-screen h-full flex justify-center items-center"
+              className="cursor-pointer w-screen h-full flex justify-center items-center"
             >
               <img
                 loading="lazy"
                 className="w-full h-full object-cover"
                 src={banner.src}
               />
-            </a>
+            </Link>
           );
         })}
       </div>
@@ -95,12 +95,91 @@ function ImageSlider() {
   );
 }
 
-function ProductLayoutShocase() {
+function NewArrival() {
+  const allProduct = useAllProducts();
+  const newInProduct = [...allProduct].sort(
+    (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis(),
+  );
   return (
-    <div className="w-screen h-max flex flex-col items-center">
-      {layoutData.map((layout) => {
-        return <ProductLayout key={layout.id} props={layout} />;
-      })}
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">New Arrival</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {newInProduct.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function MenNewIn() {
+  const allProduct = useAllProducts();
+  const newInProduct = [...allProduct].sort(
+    (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis(),
+  );
+  const mewNewIn = newInProduct.filter((product) => product.category === 'men');
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">Men new in</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {mewNewIn.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+function WomenNewIn() {
+  const allProduct = useAllProducts();
+  const newInProduct = [...allProduct].sort(
+    (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis(),
+  );
+  const womenNewIn = newInProduct.filter(
+    (product) => product.category === 'women',
+  );
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-10 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">Women new in</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {womenNewIn.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+function UltimateSaving() {
+  const allProduct = useAllProducts();
+  const newInProduct = [...allProduct].sort((a, b) => b.dis - a.dis);
+  const saving = newInProduct.filter((product) => product.dis > 0);
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="text-3xl font-semibold">Ultimate saving</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {saving.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
     </div>
   );
 }
@@ -111,9 +190,15 @@ function IndexPage() {
       <Promotion />
       <Brand />
       <ImageSlider />
-      <ProductLayoutShocase />
+      <NewArrival />
+      <MenNewIn />
+      <WomenNewIn />
+      <UltimateSaving />
       <GridLayout />
-      <ProductLayoutShocase />
+      <NewArrival />
+      <MenNewIn />
+      <WomenNewIn />
+      <UltimateSaving />
     </section>
   );
 }

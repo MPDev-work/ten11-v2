@@ -1,16 +1,3 @@
-const product = {
-  id: 1,
-  storeID: ``,
-  category: ``,
-  title: `Relaxed Striped Polo T-Shirt`,
-  src: cardImage,
-  price: 15.59,
-  dis: 50,
-  colors: [`white`, `black`, `gray`],
-  size: ['S', 'M', 'L', 'XL', 'XXL'],
-  stock: 20,
-};
-
 // for category can be selected wheater it a {men, wemen, kids, accessory, z.home}
 
 // // color, size, storeID {show the sore name by take the name and convert to lowercase for store id} can be seleted, and stock can input, src can be input as a link and other can input as normal,
