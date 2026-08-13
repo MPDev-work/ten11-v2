@@ -124,7 +124,13 @@ function Navbar({ setOpenFav, openFav }) {
     }
   };
 
-  const username = user?.firstname || user?.email?.split('@')[0] || '';
+  const username =
+    auth.currentUser?.displayName.slice(
+      0,
+      auth.currentUser?.displayName.indexOf(' '),
+    ) ||
+    user?.email?.split('@')[0] ||
+    '';
   const displayName = username.slice(0, 1).toUpperCase() + username.slice(1);
   const userInitial = username.charAt(0).toUpperCase();
   const searchResults = useMemo(() => {
@@ -230,7 +236,17 @@ function Navbar({ setOpenFav, openFav }) {
                   <span className="grid size-8 place-items-center rounded-full bg-black text-sm font-bold text-white">
                     {userInitial}
                   </span>
-                  <span className="max-w-28 truncate">{displayName}</span>
+                  <div
+                    className="flex flex-col justify-center gap-1
+                  "
+                  >
+                    <span className="Capitalize leading-[1]">
+                      {displayName}
+                    </span>
+                    <span className="Capitalize text-[10px] text-blue-500 leading-[1]">
+                      Active
+                    </span>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -436,7 +452,9 @@ function Navbar({ setOpenFav, openFav }) {
                     </div>
                     <button
                       type="button"
-                      onClick={() => removeFromCart(item.id, item.size, item.color)}
+                      onClick={() =>
+                        removeFromCart(item.id, item.size, item.color)
+                      }
                       className="text-sm underline"
                     >
                       Remove

@@ -170,13 +170,72 @@ function UltimateSaving() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="text-3xl font-semibold">Ultimate saving</h1>
+        <h1 className="uppercase text-3xl font-semibold">Ultimate saving</h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
       <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
         {saving.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+function ZHome() {
+  const allProduct = useAllProducts();
+  const zhome = allProduct.filter((z) => z.category === 'z.home');
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">Shop Zando home</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {zhome.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+function Kids() {
+  const allProduct = useAllProducts();
+  const kids = allProduct.filter((z) => z.category === 'kids');
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">Shop fo your child</h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {kids.slice(0, 4).map((product) => {
+          return <Card product={product} key={product.id} />;
+        })}
+      </div>
+    </div>
+  );
+}
+function Accessories() {
+  const allProduct = useAllProducts();
+  const kids = allProduct.filter((z) => z.category === 'accessory');
+  return (
+    <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
+      <div className="w-full flex justify-between items-center">
+        <h1 className="uppercase text-3xl font-semibold">
+          Everyday Accessories
+        </h1>
+        <Link className="font-semibold" to={'/'}>
+          See more
+        </Link>
+      </div>
+      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+        {kids.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
       </div>
@@ -195,10 +254,10 @@ function IndexPage() {
       <WomenNewIn />
       <UltimateSaving />
       <GridLayout />
-      <NewArrival />
-      <MenNewIn />
-      <WomenNewIn />
-      <UltimateSaving />
+      <ZHome />
+      <Kids />
+      <Accessories />
+      {/* <UltimateSaving /> */}
     </section>
   );
 }

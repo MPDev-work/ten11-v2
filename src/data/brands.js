@@ -61,8 +61,8 @@ export const brandData = [
   {
     id: 9,
     src: ZandoHome,
-    name: `zando hoem`,
-    link: '/zandohome',
+    name: `zando home`,
+    link: '/z.home',
   },
   {
     id: 10,

@@ -26,7 +26,7 @@ function Card({ product }) {
 
         <div className="absolute z-10 right-0 -bottom-12 w-5 h-32 flex items-center overflow-visible -rotate-90 origin-left">
           <p className="text-center uppercase text-black text-base leading-none whitespace-nowrap">
-            {product.storeID}
+            {product.storeID} | {product.category}
           </p>
         </div>
       </Link>

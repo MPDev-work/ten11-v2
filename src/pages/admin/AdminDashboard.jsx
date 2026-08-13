@@ -82,8 +82,9 @@ const productColors = [
   'green',
   'brown',
   'beige',
+  'pink',
 ];
-const productSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+const productSizes = ['S', 'M', 'L', 'XL', 'XXL', 'Free size'];
 const productCategories = [
   { label: 'Men', value: 'men' },
   { label: 'Women', value: 'women' },
