@@ -6,6 +6,7 @@ import { useShop } from '../../../hooks/useShop';
 import { useStoreSettings } from '../../../hooks/useStoreSettings';
 import { useProduct } from '../../../hooks/useProduct';
 import { useProducts } from '../../../hooks/useProducts';
+import { Handbag, Heart } from 'lucide-react';
 
 function Details() {
   const { addToCart, isFavorite, toggleFavorite } = useShop();
@@ -27,6 +28,7 @@ function Details() {
   const [qty, setQty] = useState(1);
   const [isSize, setIsSize] = useState(product.size[0] || '');
   const [isColor, setIsColor] = useState(product.colors[0] || '');
+  const [isAlert, setIsAlert] = useState(false);
   const colorCount = (product.colors || []).length;
   const hasDiscount = product.dis > 0;
   const displayPrice = hasDiscount
@@ -55,11 +57,14 @@ function Details() {
 
   return (
     <section className="w-screen h-max flex flex-col mt-12">
-      <div className="w-full h-screen min-h-[650px] grid grid-cols-2 items-center px-5 gap-10">
-        <div className="h-full flex justify-center items-center overflow-hidden">
-          <img className="w-full h-full object-cover" src={product.src} />
+      <div className="w-full h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex justify-center px-5">
+        <div className="h-full w-1/2 flex justify-center items-center overflow-hidden">
+          <img
+            className="h-[90%] aspect-[3/4] object-cover"
+            src={product.src}
+          />
         </div>
-        <div className="h-full flex flex-col pt-10 gap-2.5">
+        <div className="h-full w-1/2 flex flex-col justify-center gap-2.5">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 bg-red-500 rounded-full flex justify-center items-center">
               <p className="text-xl font-medium text-white">
@@ -150,10 +155,16 @@ function Details() {
           <div className="flex w-3/4 gap-2.5">
             <button
               type="button"
-              onClick={() => addToCart(product, qty, isSize, isColor)}
-              className="cursor-pointer h-12 flex-1 rounded-full bg-black text-white transition duration-100 hover:bg-black/80 active:bg-black/50"
+              onClick={() => {
+                addToCart(product, qty, isSize, isColor);
+                setIsAlert((prev) => !prev);
+                setTimeout(() => {
+                  setIsAlert(false);
+                }, 5000);
+              }}
+              className="cursor-pointer h-12 flex-1 rounded-full bg-black text-white flex justify-center items-center gap-2 transition duration-100 hover:bg-black/80 active:bg-black/50"
             >
-              Add to cart
+              <Handbag size={20} /> Add to cart
             </button>
             <button
               type="button"
@@ -161,12 +172,20 @@ function Details() {
               aria-label="Toggle favorite"
               className="grid h-12 w-12 place-items-center rounded-full border border-black"
             >
-              {isFavorite(product.id) ? '♥' : '♡'}
+              {isFavorite(product.id) ? (
+                <Heart fill="black" size={20} />
+              ) : (
+                <Heart size={20} />
+              )}
             </button>
           </div>
         </div>
       </div>
       <Suggest currentProduct={product} products={products} />
+      {isAlert && <Alert message={'Product add ot card successfully'} />}
+      {/* {toggleFavorite && (
+        <Alert message={'Product add to wishlist successfully'} />
+      )} */}
     </section>
   );
 }
@@ -228,5 +247,11 @@ function Suggest({ currentProduct, products }) {
     </div>
   );
 }
-
+function Alert({ message }) {
+  return (
+    <div className="animate_drop_down fixed top-0 z-[1002] left-1/2 -translate-x-1/2 h-8  px-2.5 flex items-center justify-center gap-2 rounded-full bg-black border-gray-300 text-sm text-white">
+      {message} <Handbag size={16} />
+    </div>
+  );
+}
 export default Details;

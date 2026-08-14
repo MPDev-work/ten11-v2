@@ -77,3 +77,20 @@ body {
     transform: translateX(-500vw);
   }
 }
+.animate_drop_down {
+  animation: drop_down 5s cubic-bezier(0.86, 0, 0.03, 0.98) alternate;
+}
+@keyframes drop_down {
+  0% {
+    transform: translateY(-150%);
+  }
+  10% {
+    transform: translateY(175%);
+  }
+  90% {
+    transform: translateY(175%);
+  }
+  100% {
+    transform: translateY(-150%);
+  }
+}
