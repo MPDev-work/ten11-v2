@@ -1,0 +1,91 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    // Public storefront catalogue
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Used by useStoreSettings() throughout the public storefront.
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Cart and wishlist data used by ShopContext. The document ID is the
+    // Firebase Auth UID, so customers can access only their own saved shop.
+    match /userShops/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // Customer profile document ID must match Firebase Auth UID.
+    match /customers/{userId} {
+      allow create: if isOwner(userId)
+        && request.resource.data.keys()
+          .hasOnly(['name', 'email', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.createdAt == request.time;
+
+      allow get: if isOwner(userId) || isAdmin();
+      allow list, update, delete: if isAdmin();
+
+      match /cart/{itemId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+
+      match /wishlist/{productId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+
+      match /orders/{orderId} {
+        allow create: if isOwner(userId)
+          && request.resource.data.ownerId == request.auth.uid;
+
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // Current AdminDashboard uses this top-level collection.
+    match /orders/{orderId} {
+      allow read, create, update, delete: if isAdmin();
+    }
+
+    // Supports future collectionGroup('orders') queries.
+    match /{path=**}/orders/{orderId} {
+      allow read: if isAdmin();
+    }
+
+    // Create these manually from Firebase Console / Admin SDK only.
+    match /admins/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // Everything else stays private.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
