@@ -9,6 +9,8 @@ import {
   LogOut,
   Search as SearchIcon,
   X,
+  UserRound,
+  Menu,
 } from 'lucide-react';
 import { brandData } from '../../data/brands';
 import { auth } from '../../lib/firebaseClient';
@@ -57,6 +59,7 @@ function HeaderButton({ label, icon: Icon, onClick, badge }) {
 
 function Navbar({ setOpenFav, openFav }) {
   const [activeModal, setActiveModal] = useState(null);
+  const [isSideBar, setIsSideBar] = useState(false);
   const [query, setQuery] = useState('');
   const [user, setUser] = useState(null);
   const inputRef = useRef(null);
@@ -174,9 +177,15 @@ function Navbar({ setOpenFav, openFav }) {
               ),
             )}
           </ul>
+          <button
+            onClick={() => setIsSideBar((prev) => !prev)}
+            className="absolute left-2.5 flex lg:hidden"
+          >
+            <Menu size={20} className="text-black" />
+          </button>
           <Link
             to="/"
-            className="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold uppercase text-black"
+            className="absolute left-10 lg:left-1/2 lg:-translate-x-1/2 text-2xl lg:text-4xl font-semibold uppercase text-black"
           >
             {storeName}
           </Link>
@@ -224,18 +233,26 @@ function Navbar({ setOpenFav, openFav }) {
               badge={favorites.length > 0}
               onClick={openFavorites}
             />
-            <HeaderButton
+            {/* <HeaderButton
               label="Open notifications"
               icon={Bell}
               badge
               onClick={() => openModal('notifications')}
-            />
+            /> */}
             <HeaderButton
               label="Open shopping bag"
               icon={Handbag}
               badge={cartCount > 0}
               onClick={() => openModal('bag')}
             />
+            {!user && (
+              <Link
+                to="/login"
+                className="h-full w-8 flex items-center justify-center lg:hidden"
+              >
+                <UserRound size={20} />
+              </Link>
+            )}
             {user ? (
               <>
                 <Link
@@ -523,6 +540,83 @@ function Navbar({ setOpenFav, openFav }) {
           </div>
         )}
       </ActionModal>
+      <SideBar
+        setIsSideBar={setIsSideBar}
+        isSideBar={isSideBar}
+        handleLogout={handleLogout}
+      />
+    </>
+  );
+}
+
+function SideBar({ isSideBar, setIsSideBar, handleLogout }) {
+  return (
+    <>
+      <aside
+        className={`fixed top-0 z-[1001] w-[75vw] h-dvh flex flex-col gap-2.5 p-2.5 bg-white transition duration-300 ${isSideBar ? `translate-x-0` : `-translate-x-[100%]`}`}
+      >
+        <div className="w-full flex justify-between items-center px-2.5">
+          <h1 className="text-2xl font-semibold text-black">Ten11</h1>
+          <button onClick={() => setIsSideBar((prev) => !prev)}>
+            <X size={20} className="text-black" />
+          </button>
+        </div>
+        <hr className="w-full border-t border-gray-300" />
+        <div className="relative w-full h-max flex flex-col gap-2.5 px-2.5">
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/"
+          >
+            Home
+          </Link>
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/men"
+          >
+            Men
+          </Link>
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/women"
+          >
+            Women
+          </Link>
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/kids"
+          >
+            Kids
+          </Link>
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/accessories"
+          >
+            Accessories
+          </Link>
+          <Link
+            onClick={() => setTimeout(() => setIsSideBar((prev) => !prev), 200)}
+            className="text-lg font-medium"
+            to="/brands"
+          >
+            Brands
+          </Link>
+        </div>
+        <div
+          onClick={handleLogout}
+          className="absolute bottom-5 w-[calc(100%-20px)] border rounded-full h-10 text-sm text-black border-black flex justify-center items-center"
+        >
+          Logout
+        </div>
+      </aside>
+      <div
+        onClick={() => setIsSideBar((prev) => !prev)}
+        className={`fixed top-0 z-[1000] w-screen h-dvh bg-white/50 backdrop-blur-3xl transition duration-300 ${isSideBar ? `translate-x-0` : `-translate-x-[100%]`}`}
+      ></div>
     </>
   );
 }

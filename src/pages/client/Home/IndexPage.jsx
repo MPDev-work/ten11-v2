@@ -73,7 +73,7 @@ function Brand() {
 
 function ImageSlider() {
   return (
-    <section className="w-screen h-[200px] lg:h-[320px] flex justify-start items-center overflow-hidden">
+    <section className="w-screen h-[120px] lg:h-[320px] flex justify-start items-center overflow-hidden">
       <div className="animate-slider h-full w-max flex justify-start items-center">
         {ImageData.map((banner) => {
           return (
