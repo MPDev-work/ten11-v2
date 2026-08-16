@@ -26,7 +26,7 @@ function FilterBar({ active, products = [], selectedBrand, onBrandChange }) {
             type="button"
             key={brand}
             onClick={() => onBrandChange(brand)}
-            className={`cursor-pointer h-8 whitespace-nowrap px-2.5 border rounded-lg text-base font-medium transition ${selectedBrand === brand ? 'border-black bg-black text-white' : 'border-gray-300 hover:border-black'}`}
+            className={`cursor-pointer capitalize h-8 whitespace-nowrap px-2.5 border rounded-lg text-base font-medium transition ${selectedBrand === brand ? 'border-black bg-black text-white' : 'border-gray-300 hover:border-black'}`}
           >
             {brand} (
             {products.filter((product) => product.storeID === brand).length})

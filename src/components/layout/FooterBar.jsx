@@ -6,7 +6,7 @@ function FooterBar() {
 
   return (
     <>
-      <footer className="h-max w-screen flex flex-row justify-evenly items-start bg-gray-100 pt-12 mt-10 pb-5 rounded-tl-[100px] rounded-tr-[100px]">
+      <footer className="h-max w-screen flex flex-col lg:flex-row justify-evenly items-start bg-gray-100 px-5 gap-2.5 pt-12 pb-5 mt-10 rounded-t-[48px] lg:rounded-t-[100px]">
         <div className="flex flex-col justify-start items-start gap-4">
           <Link
             className="uppercase tracking-tight leading-6.5 text-4xl font-semibold"
