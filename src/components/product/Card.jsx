@@ -15,7 +15,7 @@ function Card({ product }) {
       <Link
         to={`/products/${product.id}`}
         state={{ product }}
-        className="relative block h-[400px] overflow-hidden"
+        className="relative block h-[300px] lg:h-[400px] overflow-hidden"
       >
         <img
           loading="lazy"
@@ -25,14 +25,14 @@ function Card({ product }) {
         />
 
         <div className="absolute z-10 right-0 -bottom-12 w-5 h-32 flex items-center overflow-visible -rotate-90 origin-left">
-          <p className="text-center uppercase text-black text-base leading-none whitespace-nowrap">
+          <p className="text-center uppercase text-black text-sm lg:text-base leading-none whitespace-nowrap">
             {product.storeID} | {product.category}
           </p>
         </div>
       </Link>
       <div className="w-full flex flex-col gap2.5 px-3">
         <div className="w-full flex justify-between items-center">
-          <div className="flex gap-2.5 items-end">
+          <div className="flex gap-2.5 items-start">
             <h1 className="text-lg font-semibold text-red-600">
               {formatPrice(
                 product.dis && product.dis > 0
@@ -44,7 +44,7 @@ function Card({ product }) {
               style={{
                 display: product.dis && product.dis > 0 ? 'block' : 'none',
               }}
-              className="text-lg text-gray-500 line-through"
+              className="text-sm lg:text-lg text-gray-500 line-through"
             >
               {formatPrice(product.price)}
             </h1>
@@ -65,7 +65,7 @@ function Card({ product }) {
             />
           </button>
         </div>
-        <p className="text-base w-full overflow-hidden text-nowrap text-ellipsis">
+        <p className="text-sm lg:text-base w-full overflow-hidden text-nowrap text-ellipsis">
           {product.title}
         </p>
         <div className="flex gap-2.5 mt-2.5">

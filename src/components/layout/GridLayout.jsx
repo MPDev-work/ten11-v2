@@ -40,7 +40,7 @@ function GridLayout() {
     },
   ];
   return (
-    <div className="w-screen grid grid-cols-3 grid-flow-row gap-5 px-2.5 mt-10">
+    <div className="w-screen grid grid-cols-2 lg:grid-cols-3 grid-flow-row gap-2.5 lg:gap-5 px-2.5 mt-10">
       {gridData.map((card) => {
         return <GridCard key={card.id} props={card} />;
       })}

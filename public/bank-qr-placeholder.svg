@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Replace with your bank QR code">
+  <rect width="240" height="240" fill="white"/>
+  <g fill="#111"><path d="M16 16h64v64H16zM28 28h40v40H28zM40 40h16v16H40zM160 16h64v64h-64zM172 28h40v40h-40zM184 40h16v16h-16zM16 160h64v64H16zM28 172h40v40H28zM40 184h16v16H40z"/><path d="M96 16h16v16H96zm16 16h16v16h-16zm16 16h16v16h-16zm-32 32h32v16H96zm48 0h16v16h-16zm16 16h32v16h-32zm-64 16h16v16H80zm32 0h16v16h-16zm32 16h16v16h-16zm16 16h32v16h-32zm-64 16h16v16H96zm16 16h32v16h-32zm48 0h16v16h-16zm16 16h16v16h-16zm-80 16h32v16H80zm48 0h16v16h-16zm16 16h32v16h-32z"/></g>
+  <text x="120" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#111">REPLACE QR</text>
+</svg>

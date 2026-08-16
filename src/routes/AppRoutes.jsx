@@ -15,6 +15,8 @@ import ProductPage from '../pages/client/Product/ProductPage';
 import Brands from '../pages/client/brands/Brands';
 import BrandPage from '../pages/client/brands/brandPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import Checkout from '../pages/client/Checkout/Checkout';
+import Orders from '../pages/client/Orders/Orders';
 
 function StoreLayout() {
   const [openFav, setOpenFav] = useState(false);
@@ -45,6 +47,8 @@ function AppRoutes() {
         <Route path="brands" element={<Brands />} />
         <Route path="brands/:brandSlug" element={<BrandPage />} />
         <Route path="products/:productId" element={<Details />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="orders" element={<Orders />} />
       </Route>
 
       <Route path="login" element={<LoginPage />} />

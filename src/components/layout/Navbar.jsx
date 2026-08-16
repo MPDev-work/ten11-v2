@@ -117,7 +117,7 @@ function Navbar({ setOpenFav, openFav }) {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/');
+      navigate('/login');
     } catch (authError) {
       console.error('Firebase logout error:', authError);
       window.alert('Unable to log out. Please try again.');
@@ -181,7 +181,7 @@ function Navbar({ setOpenFav, openFav }) {
             {storeName}
           </Link>
           <div className="ml-auto flex items-center gap-1">
-            {!user ? (
+            {/* {!user ? (
               <button
                 type="button"
                 onClick={() => openModal('search')}
@@ -200,7 +200,16 @@ function Navbar({ setOpenFav, openFav }) {
               >
                 <SearchIcon size={20} className="text-black" />{' '}
               </button>
-            )}
+            )} */}
+            <button
+              type="button"
+              onClick={() => openModal('search')}
+              className="cursor-pointer hidden h-9 items-center gap-2 rounded-sm border border-gray-300 pl-4 pr-20 text-base font-medium text-gray-300 transition duration-150 hover:border-gray-400 hover:text-gray-500 sm:flex"
+              aria-label="Search"
+            >
+              <SearchIcon size={20} className="text-gray-400" />{' '}
+              <span>Search</span>
+            </button>
             <button
               type="button"
               onClick={() => openModal('search')}
@@ -229,8 +238,9 @@ function Navbar({ setOpenFav, openFav }) {
             />
             {user ? (
               <>
-                <div
-                  className="hidden h-10 items-center gap-2 px-2 text-sm font-semibold text-black md:flex"
+                <Link
+                  to="/orders"
+                  className="cursor-pointer hidden h-10 items-center gap-2 px-2 text-sm font-semibold text-black md:flex"
                   aria-label={`Signed in as ${displayName}`}
                 >
                   <span className="grid size-8 place-items-center rounded-full bg-black text-sm font-bold text-white">
@@ -247,7 +257,13 @@ function Navbar({ setOpenFav, openFav }) {
                       Active
                     </span>
                   </div>
-                </div>
+                </Link>
+                {/* <Link
+                  to="/orders"
+                  className="hidden px-2 text-sm font-semibold uppercase text-black transition hover:text-slate-500 md:block"
+                >
+                  Orders
+                </Link> */}
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -468,7 +484,11 @@ function Navbar({ setOpenFav, openFav }) {
                   </div>
                   <button
                     type="button"
-                    className="mt-4 w-full rounded-full bg-black py-3 text-white"
+                    onClick={() => {
+                      closeModal();
+                      navigate('/checkout');
+                    }}
+                    className="cursor-pointer mt-4 w-full rounded-full bg-black py-3 text-white"
                   >
                     Checkout
                   </button>

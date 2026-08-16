@@ -57,14 +57,14 @@ function Details() {
 
   return (
     <section className="w-screen h-max flex flex-col mt-12">
-      <div className="w-full h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex justify-center px-5">
-        <div className="h-full w-1/2 flex justify-center items-center overflow-hidden">
+      <div className="w-full h-max lg:h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex flex-col lg:flex-row justify-center lg:px-5 p-5">
+        <div className="w-full h-[80dvh] lg:w-1/2 flex justify-center items-center overflow-hidden">
           <img
-            className="h-[90%] aspect-[3/4] object-cover"
+            className="w-full h-full lg:h-[90%] lg:w-max aspect-[3/4] object-cover"
             src={product.src}
           />
         </div>
-        <div className="h-full w-1/2 flex flex-col justify-center gap-2.5">
+        <div className="lg:h-full h-max w-full lg:w-1/2 flex flex-col justify-center gap-2.5 py-7 lg:py-0">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 bg-red-500 rounded-full flex justify-center items-center">
               <p className="text-xl font-medium text-white">
@@ -152,7 +152,7 @@ function Details() {
               Stock available {product.stock}
             </p>
           )}
-          <div className="flex w-3/4 gap-2.5">
+          <div className="flex w-full lg:w-3/4 gap-2.5 lg:pt-0 pt-5">
             <button
               type="button"
               onClick={() => {
@@ -162,7 +162,7 @@ function Details() {
                   setIsAlert(false);
                 }, 5000);
               }}
-              className="cursor-pointer h-12 flex-1 rounded-full bg-black text-white flex justify-center items-center gap-2 transition duration-100 hover:bg-black/80 active:bg-black/50"
+              className="cursor-pointer  h-12 flex-1 rounded-full bg-black text-white flex justify-center items-center gap-2 transition duration-100 hover:bg-black/80 active:bg-black/50"
             >
               <Handbag size={20} /> Add to cart
             </button>
@@ -228,18 +228,18 @@ function Suggest({ currentProduct, products }) {
       product.id !== currentProduct.id &&
       product.storeID === currentProduct.storeID,
   );
-  console.log(suggestions.length);
+  // console.log(suggestions.length);
   return (
     <div
       className={`w-full h-max ${suggestions.length + 1 !== 1 ? `flex` : `hidden`} flex-col items-center gap-8 px-2.5 mt-16 `}
     >
       <div className="relative w-full flex items-center pl-20">
-        <h1 className="absolute z-10 bg-white px-1 uppercase text-3xl font-semibold">
+        <h1 className="absolute z-10 bg-white px-1 uppercase text-xl lg:text-3xl font-semibold">
           SIMILAR ITEMS
         </h1>
         <hr className="absolute left-0 z-0 w-full border-t-1 border-gray-200" />
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-5">
         {suggestions.slice(0, 4).map((product) => (
           <Card key={`${product.id}`} product={product} />
         ))}

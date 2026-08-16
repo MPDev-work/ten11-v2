@@ -18,7 +18,6 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  setDoc,
   updateDoc,
 } from 'firebase/firestore';
 import {
@@ -31,7 +30,6 @@ import {
   PackagePlus,
   Pencil,
   PlusCircle,
-  Settings,
   ShoppingBag,
   Trash2,
   UserCog,
@@ -51,16 +49,17 @@ const navGroups = [
       ['/admin/products', 'All products', Box],
       ['/admin/products/new', 'Add product', PackagePlus],
       ['/admin/customers', 'Customers', Users],
+      // ['/admin/profile', 'Edit profile', UserCog],
     ],
   ],
   [
     'Account Info',
     [
       ['/admin/profile', 'Edit profile', UserCog],
-      ['/admin/settings', 'Settings', Settings],
+      ['/admin/help', 'Help center', CircleHelp],
     ],
   ],
-  ['Support', [['/admin/help', 'Help center', CircleHelp]]],
+  // ['Support', [['/admin/help', 'Help center', CircleHelp]]],
 ];
 const emptyProduct = {
   title: '',
@@ -97,12 +96,6 @@ const storeOptions = brandData.map((brand) => ({
   value: brand.name.toLowerCase(),
 }));
 const emptyCustomer = { name: '', email: '', phone: '' };
-const emptyOrder = {
-  customerName: '',
-  customerEmail: '',
-  total: '',
-  status: 'pending',
-};
 const button =
   'inline-flex items-center justify-center gap-1.5 rounded-full bg-black px-5 py-3 text-sm text-white transition hover:bg-slate-700 disabled:opacity-60';
 
@@ -189,12 +182,12 @@ function AdminLayout({ children }) {
             </div>
           </section>
         ))}
-        <div className="w-full p-1.5 bg-white rounded-full">
+        <div className="absolute bottom-5 w-[calc(100%-20px)] p-1.5 bg-white rounded-full">
           <button
             type="button"
             disabled={loggingOut}
             onClick={handleLogout}
-            className="flex h-10 w-full items-center gap-3 rounded-[30px] px-3 text-sm text-slate-500 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="cursor-pointer flex h-10 w-full items-center gap-3 rounded-[30px] px-3 text-sm text-slate-500 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             <LogOut size={17} />
             {loggingOut ? 'Logging out…' : 'Log out'}
@@ -877,102 +870,151 @@ function Customers() {
   );
 }
 function Orders() {
-  return (
-    <CrudList
-      collectionName="orders"
-      heading="Orders"
-      eyebrow="Sales"
-      description="Track orders and their fulfillment status."
-      fields={['customerName', 'customerEmail', 'total', 'status']}
-      empty={emptyOrder}
-      columns={[
-        ['Order', (item) => `#${item.id.slice(0, 6)}`],
-        [
-          'Customer',
-          (item) => (
-            <>
-              <b>{item.customerName || 'Guest'}</b>
-              <small className="block text-slate-400">
-                {item.customerEmail}
-              </small>
-            </>
-          ),
-        ],
-        ['Total', (item) => <Money value={item.total} />],
-        [
-          'Status',
-          (item) => (
-            <span
-              className={`rounded-full px-3 py-1 ${item.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : item.status === 'cancelled' ? 'bg-red-50 text-red-700' : item.status === 'processing' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}
-            >
-              {item.status || 'pending'}
-            </span>
-          ),
-        ],
-        [
-          'Date',
-          (item) => (
-            <span className="text-slate-500">{dateOf(item.createdAt)}</span>
-          ),
-        ],
-      ]}
-    />
-  );
-}
-function SettingsPage() {
-  const settings = useCollection('settings');
-  const [form, setForm] = useState({ storeName: '', currency: 'USD' });
-  useEffect(() => {
-    const current = settings.find((item) => item.id === 'store');
-    if (!current) return undefined;
-
-    const timer = window.setTimeout(() => {
-      setForm({
-        storeName: current.storeName || '',
-        currency: current.currency || 'USD',
-      });
-    }, 0);
-
-    return () => window.clearTimeout(timer);
-  }, [settings]);
+  const orders = useCollection('orders');
+  const [expandedId, setExpandedId] = useState(null);
+  const updateStatus = (id, status) =>
+    updateDoc(doc(db, 'orders', id), {
+      status,
+      updatedAt: serverTimestamp(),
+    });
   return (
     <>
       <PageHeading
-        eyebrow="Account"
-        title="Store settings"
-        description="Control the basics that appear across your store."
+        eyebrow="Sales"
+        title="Orders"
+        description="Live orders submitted by your customers. Review the order summary and update fulfillment here."
       />
-      <form
-        onSubmit={async (event) => {
-          event.preventDefault();
-          await setDoc(
-            doc(db, 'settings', 'store'),
-            { ...form, updatedAt: serverTimestamp() },
-            { merge: true },
-          );
-        }}
-        className="grid w-full gap-4 rounded-[28px] bg-[#f2f2f6] p-5 sm:grid-cols-2"
-      >
-        <Field label="Store name">
-          <input
-            className={input}
-            value={form.storeName}
-            onChange={(e) => setForm({ ...form, storeName: e.target.value })}
-          />
-        </Field>
-        <Field label="Currency">
-          <select
-            className={input}
-            value={form.currency}
-            onChange={(e) => setForm({ ...form, currency: e.target.value })}
-          >
-            {['USD', 'KHR', 'EUR', 'CNY'].map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </Field>
-        <button className={`${button} w-fit`}>Save settings</button>
-      </form>
+      <div className="overflow-x-auto rounded-[24px] border border-slate-100">
+        <table className="w-full min-w-[850px] text-left text-sm">
+          <thead className="bg-black text-white">
+            <tr>
+              <th className="px-5 py-4">Order</th>
+              <th className="px-5 py-4">Customer & delivery</th>
+              <th className="px-5 py-4">Payment</th>
+              <th className="px-5 py-4">Total</th>
+              <th className="px-5 py-4">Status</th>
+              <th className="px-5 py-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.length ? (
+              orders.map((item) => (
+                <>
+                  <tr
+                    className="border-b border-slate-100 hover:bg-[#f2f2f6]"
+                    key={item.id}
+                  >
+                    <td className="px-5 py-4">
+                      <b>#{item.id.slice(0, 7)}</b>
+                      <small className="block text-slate-400">
+                        {dateOf(item.createdAt)}
+                      </small>
+                    </td>
+                    <td className="px-5 py-4">
+                      <b>{item.customerName || 'Guest'}</b>
+                      <small className="block text-slate-400">
+                        {item.phone || '—'} · {item.address || 'No address'}
+                      </small>
+                    </td>
+                    <td className="px-5 py-4">
+                      {item.paymentLabel || item.paymentMethod || '—'}
+                    </td>
+                    <td className="px-5 py-4">
+                      <Money value={item.total} />
+                    </td>
+                    <td className="px-5 py-4">
+                      <select
+                        value={item.status || 'pending'}
+                        onChange={(event) =>
+                          updateStatus(item.id, event.target.value)
+                        }
+                        className="rounded-full bg-slate-100 px-3 py-2 text-sm"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <button
+                        onClick={() =>
+                          setExpandedId(expandedId === item.id ? null : item.id)
+                        }
+                        className="rounded-full border border-slate-300 px-3 py-2 text-xs"
+                      >
+                        {expandedId === item.id
+                          ? 'Hide summary'
+                          : 'Order summary'}
+                      </button>
+                      {item.status !== 'completed' &&
+                        item.status !== 'cancelled' && (
+                          <button
+                            onClick={() => updateStatus(item.id, 'completed')}
+                            className="ml-2 rounded-full bg-emerald-600 px-3 py-2 text-xs text-white"
+                          >
+                            Complete order
+                          </button>
+                        )}
+                    </td>
+                  </tr>
+                  {expandedId === item.id && (
+                    <tr
+                      key={`${item.id}-summary`}
+                      className="border-b border-slate-100 bg-slate-50"
+                    >
+                      <td colSpan="6" className="px-5 py-5">
+                        <div className="grid gap-5 md:grid-cols-2">
+                          <div>
+                            <b>Order items</b>
+                            <div className="mt-2 space-y-2">
+                              {(item.items || []).map((product, index) => (
+                                <div
+                                  className="flex justify-between text-sm"
+                                  key={`${product.id}-${index}`}
+                                >
+                                  <span>
+                                    {product.quantity} × {product.title}{' '}
+                                    {product.size &&
+                                      `(${product.size}, ${product.color})`}
+                                  </span>
+                                  <span>
+                                    <Money
+                                      value={
+                                        product.price *
+                                        (1 - product.dis / 100) *
+                                        product.quantity
+                                      }
+                                    />
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <b>Customer details</b>
+                            <p className="mt-2 text-sm text-slate-600">
+                              {item.customerName}
+                              <br />
+                              {item.customerEmail}
+                              <br />
+                              {item.phone}
+                              <br />
+                              {item.address}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              ))
+            ) : (
+              <Empty colSpan={6}>No customer orders yet.</Empty>
+            )}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
@@ -999,7 +1041,6 @@ export default function AdminDashboard() {
         <Route path="products/:id" element={<ProductForm />} />
         <Route path="customers" element={<Customers />} />
         <Route path="orders" element={<Orders />} />
-        <Route path="settings" element={<SettingsPage />} />
         <Route
           path="profile"
           element={

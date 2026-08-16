@@ -35,11 +35,7 @@ function RegisterPage() {
 
     let credential;
     try {
-      credential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
+      credential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(credential.user, {
         displayName: `${firstName} ${lastName}`.trim(),
       });
@@ -86,11 +82,11 @@ function RegisterPage() {
 
         <a href="register.html">
           <h1 className="uppercase text-[40px] font-bold tracking-[-2px] cursor-pointer">
-            solis <span className="text-[#d3d3d6] ml-2">skin</span>
+            Ten11
           </h1>
         </a>
 
-        <h3 className="text-[20px] font-medium">Sign up to SOLIS SKIN</h3>
+        <h3 className="text-[20px] font-medium">Sign up to Ten11</h3>
       </nav>
 
       <section className="flex flex-col items-center justify-center mt-[100px] gap-5">

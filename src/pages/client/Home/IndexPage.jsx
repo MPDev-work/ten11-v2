@@ -103,12 +103,14 @@ function NewArrival() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">New Arrival</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          New Arrival
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {newInProduct.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -126,12 +128,14 @@ function MenNewIn() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">Men new in</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          Men new in
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {mewNewIn.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -150,12 +154,14 @@ function WomenNewIn() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-10 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">Women new in</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          Women new in
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {womenNewIn.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -170,12 +176,14 @@ function UltimateSaving() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">Ultimate saving</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          Ultimate saving
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {saving.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -189,12 +197,14 @@ function ZHome() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">Shop Zando home</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          Shop Zando home
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {zhome.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -208,12 +218,14 @@ function Kids() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">Shop fo your child</h1>
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
+          Shop fo your child
+        </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {kids.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}
@@ -227,14 +239,14 @@ function Accessories() {
   return (
     <div className="w-screen h-max flex flex-col items-center gap-8 mt-8 px-2.5">
       <div className="w-full flex justify-between items-center">
-        <h1 className="uppercase text-3xl font-semibold">
+        <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Everyday Accessories
         </h1>
         <Link className="font-semibold" to={'/'}>
           See more
         </Link>
       </div>
-      <div className="w-full h-max grid grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {kids.slice(0, 4).map((product) => {
           return <Card product={product} key={product.id} />;
         })}

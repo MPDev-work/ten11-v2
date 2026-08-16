@@ -16,13 +16,19 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const credential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const token = await credential.user.getIdTokenResult();
       let role = token.claims.role;
 
       if (!role) {
         const profile = await get(ref(rtdb, `users/${credential.user.uid}`));
-        role = profile.exists() ? profile.val().role || profile.val().roles : '';
+        role = profile.exists()
+          ? profile.val().role || profile.val().roles
+          : '';
       }
 
       const isAdmin = Array.isArray(role)
@@ -45,10 +51,10 @@ function LoginPage() {
         </Link>
         <a href="login.html">
           <h1 className="uppercase text-[40px] font-bold tracking-[-2px]">
-            solis <span className="text-[#d3d3d6] ml-2">skin</span>
+            Ten11
           </h1>
         </a>
-        <h3 className="text-[20px] font-medium">Sign in to SOLIS SKIN</h3>
+        <h3 className="text-[20px] font-medium">Sign in to Ten11</h3>
       </nav>
       <section className="flex flex-col items-center justify-center pt-[100px] gap-5">
         <form

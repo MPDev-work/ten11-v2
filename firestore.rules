@@ -69,7 +69,20 @@ service cloud.firestore {
 
     // Current AdminDashboard uses this top-level collection.
     match /orders/{orderId} {
-      allow read, create, update, delete: if isAdmin();
+      allow create: if isAdmin() || (signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status == 'pending');
+      allow get, list: if isAdmin() || (signedIn()
+        && resource.data.ownerId == request.auth.uid);
+      // A customer may only cancel their own still-pending order. All other
+      // fulfillment changes are made by an administrator.
+      allow update: if isAdmin() || (signedIn()
+        && resource.data.ownerId == request.auth.uid
+        && resource.data.status == 'pending'
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status']));
+      allow delete: if isAdmin();
     }
 
     // Supports future collectionGroup('orders') queries.

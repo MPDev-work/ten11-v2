@@ -132,6 +132,12 @@ export function ShopProvider({ children }) {
         setCart(nextCart);
         saveShop({ cart: nextCart });
       },
+      clearCart() {
+        if (!activeUserId.current || !shopReady.current) return;
+        cartRef.current = [];
+        setCart([]);
+        saveShop({ cart: [] });
+      },
       toggleFavorite(product) {
         if (!activeUserId.current || !shopReady.current) return;
         const nextFavorites = favoritesRef.current.some(
