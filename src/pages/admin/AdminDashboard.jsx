@@ -194,7 +194,9 @@ function AdminLayout({ children }) {
           </button>
         </div>
       </aside>
-      <div className="fixed top-16 right-0 h-screen w-[calc(100vw-256px)] overflow-scroll bg-white pl-5 pr-2.5 pt-5 pb-20 rounded-tl-4xl">
+      <div
+        className={`fixed top-16 right-0 h-screen lg:w-[calc(100vw-256px)] w-screen ${menuOpen ? `translate-x-[calc(100%-180px)]` : `translate-x-0`}  overflow-scroll scrollbar-thin bg-white pl-5 pr-2.5 pt-5 pb-20 rounded-tl-4xl transition-transform`}
+      >
         <main className="relative z-0 h-max w-full overflow-y-scroll scrollbar-none">
           {children}
         </main>
@@ -893,7 +895,7 @@ function Orders() {
               <th className="px-5 py-4">Payment</th>
               <th className="px-5 py-4">Total</th>
               <th className="px-5 py-4">Status</th>
-              <th className="px-5 py-4 text-right">Action</th>
+              <th className="px-5 py-4 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -904,7 +906,7 @@ function Orders() {
                     className="border-b border-slate-100 hover:bg-[#f2f2f6]"
                     key={item.id}
                   >
-                    <td className="px-5 py-4">
+                    <td className="px-2.5 py-4">
                       <b>#{item.id.slice(0, 7)}</b>
                       <small className="block text-slate-400">
                         {dateOf(item.createdAt)}
@@ -936,12 +938,12 @@ function Orders() {
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </td>
-                    <td className="px-5 py-4 text-right">
+                    <td className="grid grid-cols-2 px-2.5 py-4 text-right">
                       <button
                         onClick={() =>
                           setExpandedId(expandedId === item.id ? null : item.id)
                         }
-                        className="rounded-full border border-slate-300 px-3 py-2 text-xs"
+                        className="rounded-full border border-slate-300 px-2 py-2 text-xs whitespace-nowrap"
                       >
                         {expandedId === item.id
                           ? 'Hide summary'
@@ -951,7 +953,7 @@ function Orders() {
                         item.status !== 'cancelled' && (
                           <button
                             onClick={() => updateStatus(item.id, 'completed')}
-                            className="ml-2 rounded-full bg-emerald-600 px-3 py-2 text-xs text-white"
+                            className="ml-2 rounded-full bg-emerald-600 px-2 py-2 text-xs text-white whitespace-nowrap"
                           >
                             Complete order
                           </button>

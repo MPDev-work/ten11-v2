@@ -88,11 +88,13 @@ export default function Checkout() {
   };
 
   return (
-    <section className="mx-auto min-h-screen max-w-6xl px-5 pb-16 pt-24">
+    <section className="min-h-screen w-screen px-5 pb-16 pt-24">
       <div className="mb-7 flex items-end justify-between gap-4">
         <div>
           <p className="text-sm text-slate-500">Secure checkout</p>
-          <h1 className="text-4xl font-semibold">Complete your order</h1>
+          <h1 className="text-2xl lg:text-4xl font-semibold">
+            Complete your order
+          </h1>
         </div>
         <Link className="text-sm underline" to="/">
           Continue shopping
@@ -100,10 +102,10 @@ export default function Checkout() {
       </div>
       <form
         onSubmit={placeOrder}
-        className="grid gap-6 lg:grid-cols-[1.1fr_.9fr]"
+        className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
         <div className="space-y-6">
-          <section className="rounded-3xl bg-[#f2f2f6] p-5">
+          <section className="rounded-[35px] bg-[#f2f2f6] p-5">
             <h2 className="text-xl font-semibold">Delivery details</h2>
             <div className="mt-4 grid gap-4">
               <Input
@@ -134,7 +136,7 @@ export default function Checkout() {
               </label>
             </div>
           </section>
-          <section className="rounded-3xl bg-[#f2f2f6] p-5">
+          <section className="rounded-[35px] bg-[#f2f2f6] p-5">
             <h2 className="text-xl font-semibold">Payment method</h2>
             <p className="mt-1 text-sm text-slate-500">
               Bank QR is static for now — edit the details in paymentSettings.js
@@ -184,7 +186,7 @@ export default function Checkout() {
         </div>
         <aside className="h-fit rounded-[35px] border border-slate-200 p-5 lg:sticky lg:top-20">
           <h2 className="text-xl font-semibold">Order summary</h2>
-          <div className="mt-4 divide-y">
+          <div className="mt-4 divide-y divide-gray-400 divide-dashed">
             {cart.map((item) => (
               <div
                 key={`${item.id}-${item.size}-${item.color}`}
@@ -249,9 +251,13 @@ function Input({ label, type = 'text', value, onChange }) {
 function PaymentChoice({ item, selected, setSelected }) {
   return (
     <label
-      className={`flex cursor-pointer items-center justify-between rounded-2xl border p-4 ${selected === item.id ? 'border-black bg-white' : 'border-transparent bg-white/60'}`}
+      className={`flex cursor-pointer items-center justify-between rounded-2xl border p-4 ${selected === item.id ? 'border-blue-500 border-dashed bg-blue-500/5' : 'border-transparent bg-white/60'}`}
     >
-      <span className="font-medium">{item.name}</span>
+      <span
+        className={`font-medium ${selected === item.id ? `text-blue-500` : `text-black`}`}
+      >
+        {item.name}
+      </span>
       <input
         type="radio"
         name="paymentMethod"
