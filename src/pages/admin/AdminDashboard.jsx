@@ -136,7 +136,7 @@ function AdminLayout({ children }) {
     }
   };
   return (
-    <div className="min-h-screen bg-[#f2f2f6] text-slate-900">
+    <div className="min-h-screen w-dvh overflow-hidden bg-[#f2f2f6] text-slate-900">
       <header className="fixed inset-x-0 top-0 px-5 z-30 flex h-16 items-center justify-between bg-[#f2f2f6]/95 backdrop-blur">
         <Link
           to="/admin"
