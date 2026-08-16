@@ -195,7 +195,7 @@ function AdminLayout({ children }) {
         </div>
       </aside>
       <div
-        className={`fixed top-16 right-0 h-screen lg:w-[calc(100vw-256px)] w-dvw ${menuOpen ? `translate-x-64` : `translate-x-0`}  overflow-scroll scrollbar-thin bg-white pl-5 pr-2.5 pt-5 pb-20 rounded-tl-4xl transition-transform`}
+        className={`fixed top-16 right-0 h-screen lg:w-[calc(100vw-256px)] w-dvw ${menuOpen ? `translate-x-64` : `translate-x-0`}  overflow-scroll scrollbar-thin bg-white lg:pl-5 lg:pr-2.5 px-2.5 lg:pt-5 lg:pb-20 pt-6 pb-30 rounded-t-4xl lg:rounded-tl-4xl transition-transform`}
       >
         <main className="relative z-0 h-max w-full overflow-y-scroll scrollbar-none">
           {children}
