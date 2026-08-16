@@ -12,7 +12,7 @@ import { useState } from 'react';
 
 function Promotion() {
   return (
-    <div className="w-screen h-[calc(100vh-48px)] min-h-[calc(650px-48px)] mt-12 flex justify-center items-center overflow-hidden">
+    <div className="w-screen h-[200px] lg:h-[calc(100vh-48px)] lg:min-h-[calc(650px-48px)] mt-12 flex justify-center items-center overflow-hidden">
       <img className="h-full w-full object-cover" src={promotion} />
     </div>
   );
@@ -24,13 +24,13 @@ function Brand() {
   return (
     <div className="relative w-screen flex items-center overflow-hidden scrollbar-none">
       <div
-        className={`absolute z-10 right-0 h-[200px] w-[100px] bg-white flex items-center transition duration-300`}
+        className={`absolute z-10 right-0 h-[200px] lg:w-[100px] w-[70px] bg-white items-center transition duration-300 ${countClick === 240 ? 'hidden' : 'flex'}`}
       >
         <button
           onClick={() =>
             setMove((move) => (countClick === 240 ? move : move + 240))
           }
-          className={`cursor-pointer absolute left-0 h-12 w-12 flex justify-center items-center bg-black/40 rounded-full transition duration-150 ${countClick === 240 ? 'opacity-0' : 'opacity-100'}`}
+          className={`cursor-pointer absolute left-1 lg:left-0 h-8 w-8 lg:h-12 lg:w-12 flex justify-center items-center bg-black/40 rounded-full transition duration-150 ${countClick === 240 ? 'opacity-0 ' : 'opacity-100'}`}
         >
           <ChevronRight className="h-5 w-5 object-contain text-white" />
         </button>
@@ -42,7 +42,7 @@ function Brand() {
           onClick={() =>
             setMove((move) => (countClick === 0 ? move : move - 240))
           }
-          className="cursor-pointer absolute left-0 h-12 w-12 flex justify-center items-center bg-black/40 rounded-full"
+          className="cursor-pointer absolute left-0 h-8 w-8 lg:h-12 lg:w-12 flex justify-center items-center bg-black/40 rounded-full"
         >
           <ChevronLeft className="h-5 w-5 object-contain text-white" />
         </button>
@@ -56,7 +56,7 @@ function Brand() {
             <Link
               key={brand.id}
               to={`/brands/${brand.link.slice(1)}`}
-              className="h-[200px] w-[200px] mr-10 flex justify-center items-center"
+              className="h-30 w-30 lg:h-[200px] lg:w-[200px] mr-10 flex justify-center items-center"
             >
               <img
                 loading="lazy"
@@ -73,7 +73,7 @@ function Brand() {
 
 function ImageSlider() {
   return (
-    <section className="w-screen h-[320px] flex justify-start items-center overflow-hidden">
+    <section className="w-screen h-[200px] lg:h-[320px] flex justify-start items-center overflow-hidden">
       <div className="animate-slider h-full w-max flex justify-start items-center">
         {ImageData.map((banner) => {
           return (

@@ -9,13 +9,13 @@ function FilterBar({ active, products = [], selectedBrand, onBrandChange }) {
       className="fixed z-[998] inset-x-0 px-2.5 top-12 h-14 flex items-center overflow-scroll scrollbar-none bg-white transition ease-[cubic-bezier(0.78, 0.01, 0.00, 0.99)] duration-500"
     >
       <div className="h-full flex items-center gap-2.5">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 whitespace-nowrap">
           <p>{products.length} items</p>
         </div>
         <button
           type="button"
           onClick={() => onBrandChange('')}
-          className={`cursor-pointer h-8 px-2.5 border rounded-lg flex items-center ${!selectedBrand ? 'border-black bg-black text-white' : 'border-gray-300'}`}
+          className={`cursor-pointer h-8 w-max px-2.5 border rounded-lg flex items-center ${!selectedBrand ? 'border-black bg-black text-white' : 'border-gray-300'}`}
         >
           All brands
         </button>

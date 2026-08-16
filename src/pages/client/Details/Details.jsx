@@ -57,10 +57,10 @@ function Details() {
 
   return (
     <section className="w-screen h-max flex flex-col mt-12">
-      <div className="w-full h-max lg:h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex flex-col lg:flex-row justify-center lg:px-5 p-5">
-        <div className="w-full h-[80dvh] lg:w-1/2 flex justify-center items-center overflow-hidden">
+      <div className="w-full h-max lg:h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex flex-col lg:flex-row justify-center lg:px-5 p-2.5">
+        <div className="w-full h-[460px] lg:w-1/2 flex justify-center items-center overflow-hidden">
           <img
-            className="w-full h-full lg:h-[90%] lg:w-max aspect-[3/4] object-cover"
+            className="w-full h-full lg:h-[90%] lg:w-max lg:aspect-[3/4] object-cover"
             src={product.src}
           />
         </div>
@@ -249,7 +249,7 @@ function Suggest({ currentProduct, products }) {
 }
 function Alert({ message }) {
   return (
-    <div className="animate_drop_down fixed top-0 z-[1002] left-1/2 -translate-x-1/2 h-8  px-2.5 flex items-center justify-center gap-2 rounded-full bg-black border-gray-300 text-sm text-white">
+    <div className="animate_drop_down fixed top-0 z-[1002] left-1/2 -translate-x-1/2 h-8  px-2.5 flex items-center justify-center gap-2 rounded-full bg-black border-gray-300 text-sm text-white text-nowrap whitespace-nowrap">
       {message} <Handbag size={16} />
     </div>
   );
