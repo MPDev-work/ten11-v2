@@ -544,12 +544,13 @@ function Navbar({ setOpenFav, openFav }) {
         setIsSideBar={setIsSideBar}
         isSideBar={isSideBar}
         handleLogout={handleLogout}
+        user={user}
       />
     </>
   );
 }
 
-function SideBar({ isSideBar, setIsSideBar, handleLogout }) {
+function SideBar({ isSideBar, setIsSideBar, handleLogout, user }) {
   return (
     <>
       <aside
@@ -606,12 +607,14 @@ function SideBar({ isSideBar, setIsSideBar, handleLogout }) {
             Brands
           </Link>
         </div>
-        <div
-          onClick={handleLogout}
-          className="absolute bottom-5 w-[calc(100%-20px)] border rounded-full h-10 text-sm text-black border-black flex justify-center items-center"
-        >
-          Logout
-        </div>
+        {user && (
+          <div
+            onClick={handleLogout}
+            className="absolute bottom-5 w-[calc(100%-20px)] border rounded-full h-10 text-sm text-black border-black flex justify-center items-center"
+          >
+            Logout
+          </div>
+        )}
       </aside>
       <div
         onClick={() => setIsSideBar((prev) => !prev)}
