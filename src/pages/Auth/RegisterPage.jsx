@@ -183,14 +183,14 @@ function RegisterPage() {
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
-        <div className="relative w-full h-[20px] mt-5">
+        {/* <div className="relative w-full lg:w-[680px] h-[20px] mt-5">
           <div className="w-full h-[1px] bg-gray-300 opacity-50"></div>
 
           <p className="absolute left-1/2 -translate-x-1/2 bottom-1/2 px-2 bg-[#f2f2f6] text-[18px]">
             or
           </p>
         </div>
-        <div className="w-full flex flex-col items-center gap-2.5 px-2.5">
+        <div className="w-full lg:w-[680px] flex flex-col items-center gap-2.5 px-2.5">
           <div className="relative w-full h-[50px] bg-white rounded-full flex items-center justify-center text-[20px] cursor-pointer">
             <i className="bi bi-google absolute left-2.5 text-[30px] flex justify-center items-center"></i>
             <p>Login with Google</p>
@@ -199,7 +199,7 @@ function RegisterPage() {
             <i className="bi bi-facebook absolute left-2.5 text-[30px] flex justify-center items-center"></i>
             <p>Login with Facebook</p>
           </div>
-        </div>
+        </div> */}
 
         <h3 className="text-[20px]">
           Have an Account?
