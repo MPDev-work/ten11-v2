@@ -618,7 +618,7 @@ function SideBar({ isSideBar, setIsSideBar, handleLogout, user }) {
       </aside>
       <div
         onClick={() => setIsSideBar((prev) => !prev)}
-        className={`fixed top-0 z-[1000] w-screen h-dvh bg-white/50 backdrop-blur-3xl transition duration-300 ${isSideBar ? `translate-x-0` : `-translate-x-[100%]`}`}
+        className={`fixed top-0 z-[1000] w-screen h-dvh bg-white/20 backdrop-blur-3xl transition duration-300 ${isSideBar ? `translate-x-0` : `-translate-x-[100%]`}`}
       ></div>
     </>
   );

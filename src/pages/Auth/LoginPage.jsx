@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth, rtdb } from '../../lib/firebaseClient';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { get, ref } from 'firebase/database';
+import { ChevronLeft } from 'lucide-react';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -45,21 +46,32 @@ function LoginPage() {
 
   return (
     <section className="bg-[#f2f2f6] w-screen h-screen scroll-smooth pb-12 flex justify-center items-center">
-      <nav className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-5 bg-white ">
-        <Link to="/" className="text-black no-underline">
-          <i className="bi bi-arrow-bar-left"></i> Back to home page
+      <nav className="fixed z-20 top-0 inset-x-0 h-14 flex items-center justify-between px-2.5 lg:px-5 bg-white ">
+        <Link
+          to="/"
+          className="hidden text-black no-underline lg:flex items-center justify-center"
+        >
+          <ChevronLeft size={20} /> Back to home page
         </Link>
-        <a href="login.html">
+        <Link
+          to="/"
+          className="lg:hidden text-black no-underline flex items-center justify-center"
+        >
+          <ChevronLeft size={20} /> Back
+        </Link>
+        <Link to="/login" className="absolute right-1/2 translate-x-1/2">
           <h1 className="uppercase text-[40px] font-bold tracking-[-2px]">
             Ten11
           </h1>
-        </a>
-        <h3 className="text-[20px] font-medium">Sign in to Ten11</h3>
+        </Link>
+        <h3 className="hidden lg:block text-[20px] font-medium">
+          Sign in to Ten11
+        </h3>
       </nav>
-      <section className="flex flex-col items-center justify-center pt-[100px] gap-5">
+      <section className="w-screen flex flex-col items-center justify-center pt-[100px] gap-5">
         <form
           onSubmit={handleLogin}
-          className="flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]"
+          className="lg:w-[680px] w-[calc(100%-20px)] flex flex-col items-center gap-2.5 p-5 bg-white rounded-[45px]"
         >
           <h3 className="text-[24px] mb-1">Enter your information</h3>
           <div className="w-full h-[1px] mt-[5px] mb-[10px] bg-[repeating-linear-gradient(to_right,#d6d6d6_0px,#d6d6d6_4px,transparent_5px,transparent_8px)]"></div>
@@ -95,7 +107,7 @@ function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer mt-5"
+            className="w-[calc(100vw-60px)] lg:w-[640px] h-[50px] bg-black text-white text-[20px] rounded-full cursor-pointer mt-5"
           >
             <i className="bi bi-person-fill"></i>{' '}
             {loading ? 'Logging in...' : 'Login Now'}

@@ -58,7 +58,7 @@ function Details() {
   return (
     <section className="w-screen h-max flex flex-col mt-12">
       <div className="w-full h-max lg:h-[calc(100vh-48px)] min-h-[calc(630px-56px)] flex flex-col lg:flex-row justify-center lg:px-5 p-2.5">
-        <div className="w-full h-[460px] lg:w-1/2 flex justify-center items-center overflow-hidden">
+        <div className="w-full h-[460px] lg:h-full lg:w-1/2 flex justify-center items-center overflow-hidden">
           <img
             className="w-full h-full lg:h-[90%] lg:w-max lg:aspect-[3/4] object-cover"
             src={product.src}
@@ -233,7 +233,7 @@ function Suggest({ currentProduct, products }) {
     <div
       className={`w-full h-max ${suggestions.length + 1 !== 1 ? `flex` : `hidden`} flex-col items-center gap-8 px-2.5 mt-16 `}
     >
-      <div className="relative w-full flex items-center pl-20">
+      <div className="relative w-full flex items-center justify-center lg:justify-start lg:pl-20">
         <h1 className="absolute z-10 bg-white px-1 uppercase text-xl lg:text-3xl font-semibold">
           SIMILAR ITEMS
         </h1>
