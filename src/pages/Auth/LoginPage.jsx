@@ -45,7 +45,7 @@ function LoginPage() {
   }
 
   return (
-    <section className="bg-[#f2f2f6] w-screen h-screen scroll-smooth pb-12 flex justify-center items-center">
+    <section className="bg-[#f2f2f6] w-screen h-dvh lg:h-screen scroll-smooth pb-12 flex justify-center items-center">
       <nav className="fixed z-20 top-0 inset-x-0 h-14 flex items-center justify-between px-2.5 lg:px-5 bg-white ">
         <Link
           to="/"
