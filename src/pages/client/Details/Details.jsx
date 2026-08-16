@@ -239,7 +239,7 @@ function Suggest({ currentProduct, products }) {
         </h1>
         <hr className="absolute left-0 z-0 w-full border-t-1 border-gray-200" />
       </div>
-      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-5">
+      <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {suggestions.slice(0, 4).map((product) => (
           <Card key={`${product.id}`} product={product} />
         ))}

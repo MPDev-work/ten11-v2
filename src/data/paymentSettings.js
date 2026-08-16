@@ -1,6 +1,6 @@
 // Replace `qrImage` with your own Bakong / bank QR image whenever needed.
 // This checkout intentionally does not call a payment API.
-import khqr from '../../public/khqr.png';
+import khqr from '../assets/qr/khqr.png';
 export const localBankPayments = [
   {
     id: 'aba',
