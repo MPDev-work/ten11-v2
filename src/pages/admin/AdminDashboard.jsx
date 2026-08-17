@@ -162,7 +162,7 @@ function AdminLayout({ children }) {
         </div>
       </header>
       <aside
-        className={`fixed bottom-0 left-0 top-16 z-20 w-64 overflow-y-auto bg-[#f2f2f6] p-3 transition-transform md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed bottom-0 left-0 top-16 z-20 w-64 overflow-y-auto overflow-x-hidden bg-[#f2f2f6] p-3 transition-transform md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {navGroups.map(([label, items]) => (
           <section className="mb-5" key={label}>
@@ -195,7 +195,7 @@ function AdminLayout({ children }) {
         </div>
       </aside>
       <div
-        className={`fixed top-16 right-0 h-screen lg:w-[calc(100vw-256px)] w-dvw ${menuOpen ? `translate-x-64` : `translate-x-0`}  overflow-scroll scrollbar-thin bg-white lg:pl-5 lg:pr-2.5 px-2.5 lg:pt-5 lg:pb-20 pt-6 pb-30 rounded-t-4xl lg:rounded-tl-4xl transition-transform`}
+        className={`fixed top-16 right-0 h-screen overflow-hidden lg:w-[calc(100vw-256px)] w-dvw ${menuOpen ? `translate-x-64` : `translate-x-0`}  overflow-scroll scrollbar-thin bg-white lg:pl-5 lg:pr-2.5 px-2.5 lg:pt-5 lg:pb-20 pt-6 pb-30 rounded-t-4xl lg:rounded-tl-4xl transition-transform`}
       >
         <main className="relative z-0 h-max w-full overflow-y-scroll scrollbar-none">
           {children}
