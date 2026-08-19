@@ -545,12 +545,21 @@ function Navbar({ setOpenFav, openFav }) {
         isSideBar={isSideBar}
         handleLogout={handleLogout}
         user={user}
+        displayName={displayName}
+        userInitial={userInitial}
       />
     </>
   );
 }
 
-function SideBar({ isSideBar, setIsSideBar, handleLogout, user }) {
+function SideBar({
+  isSideBar,
+  setIsSideBar,
+  handleLogout,
+  user,
+  displayName,
+  userInitial,
+}) {
   return (
     <>
       <aside
@@ -608,12 +617,57 @@ function SideBar({ isSideBar, setIsSideBar, handleLogout, user }) {
           </Link>
         </div>
         {user && (
-          <div
-            onClick={handleLogout}
-            className="absolute bottom-5 w-[calc(100%-20px)] border rounded-full h-10 text-sm text-black border-black flex justify-center items-center"
-          >
-            Logout
+          <div className="absolute bottom-5 w-[calc(100%-20px)] flex justify-between items-center h-10">
+            <Link
+              onClick={() =>
+                setTimeout(() => setIsSideBar((prev) => !prev), 200)
+              }
+              to="/orders"
+              className="h-full w-full flex items-center gap-2.5"
+            >
+              <div className="upperbase h-10 w-12 bg-black text-xl text-white flex justify-center items-center rounded-full">
+                {userInitial}
+              </div>
+              <div className="w-full flex flex-col justify-center">
+                <p className="capitalize text-black text-xl leading-[1]">
+                  {displayName}
+                </p>
+                <p className="text-xs text-gray-300 leading-[1]">
+                  Orders history
+                </p>
+              </div>
+            </Link>
+            <div
+              onClick={handleLogout}
+              className="abosolute z-20 left-0 h-10 w-10 border border-gray-300 rounded-full flex items-center justify-center"
+            >
+              <LogOut size={20} className="text-black" />
+            </div>
           </div>
+          // <div
+          //   onClick={handleLogout}
+          //   className="absolute bottom-5 w-[calc(100%-20px)] border rounded-full h-10 text-sm text-black border-black flex justify-center items-center"
+          // >
+          //   Logout
+          // </div>
+          // <Link
+          //   to="/orders"
+          //   className="cursor-pointer hidden h-10 items-center gap-2 px-2 text-sm font-semibold text-black md:flex"
+          //   aria-label={`Signed in as ${displayName}`}
+          // >
+          //   <span className="grid size-8 place-items-center rounded-full bg-black text-sm font-bold text-white">
+          //     {userInitial}
+          //   </span>
+          //   <div
+          //     className="flex flex-col justify-center gap-1
+          //         "
+          //   >
+          //     <span className="Capitalize leading-[1]">{displayName}</span>
+          //     <span className="Capitalize text-[10px] text-blue-500 leading-[1]">
+          //       Active
+          //     </span>
+          //   </div>
+          // </Link>
         )}
       </aside>
       <div
