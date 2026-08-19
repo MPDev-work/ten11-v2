@@ -617,18 +617,18 @@ function SideBar({
           </Link>
         </div>
         {user && (
-          <div className="absolute bottom-5 w-[calc(100%-20px)] flex justify-between items-center h-10">
+          <div className="absolute bottom-5 h-10 w-[calc(100%-20px)] flex items-center">
             <Link
               onClick={() =>
                 setTimeout(() => setIsSideBar((prev) => !prev), 200)
               }
               to="/orders"
-              className="h-full w-full flex items-center gap-2.5"
+              className="abosolute left-0 z-0 h-10 w-max flex items-center gap-2.5"
             >
-              <div className="upperbase h-10 w-12 bg-black text-xl text-white flex justify-center items-center rounded-full">
+              <div className="upperbase h-10 w-10 bg-black text-xl text-white flex justify-center items-center rounded-full overflow-hidden">
                 {userInitial}
               </div>
-              <div className="w-full flex flex-col justify-center">
+              <div className="w-max h-full flex flex-col justify-center overflow-hidden">
                 <p className="capitalize text-black text-xl leading-[1]">
                   {displayName}
                 </p>
@@ -639,7 +639,7 @@ function SideBar({
             </Link>
             <div
               onClick={handleLogout}
-              className="abosolute z-20 left-0 h-10 w-10 border border-gray-300 rounded-full flex items-center justify-center"
+              className="absolute z-20 right-0 h-10 w-10 border border-gray-300 rounded-full flex items-center justify-center"
             >
               <LogOut size={20} className="text-black" />
             </div>
