@@ -565,11 +565,13 @@ function SideBar({
       <aside
         className={`fixed top-0 z-[1001] w-[75vw] h-dvh flex flex-col gap-2.5 p-2.5 bg-white transition duration-300 ${isSideBar ? `translate-x-0` : `-translate-x-[100%]`}`}
       >
-        <div
-          onClick={() => setIsSideBar((prev) => !prev)}
-          className="w-full flex justify-between items-center px-2.5"
-        >
-          <h1 className="text-2xl font-semibold text-black">Ten11</h1>
+        <div className="w-full flex justify-between items-center px-2.5">
+          <h1
+            onClick={() => setIsSideBar((prev) => !prev)}
+            className="text-2xl font-semibold text-black"
+          >
+            Ten11
+          </h1>
           <button onClick={() => setIsSideBar((prev) => !prev)}>
             <X size={20} className="text-black" />
           </button>

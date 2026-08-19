@@ -106,9 +106,9 @@ function NewArrival() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           New Arrival
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {newInProduct.slice(0, 4).map((product) => {
@@ -131,9 +131,9 @@ function MenNewIn() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Men new in
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {mewNewIn.slice(0, 4).map((product) => {
@@ -157,9 +157,9 @@ function WomenNewIn() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Women new in
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {womenNewIn.slice(0, 4).map((product) => {
@@ -179,9 +179,9 @@ function UltimateSaving() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Ultimate saving
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {saving.slice(0, 4).map((product) => {
@@ -200,9 +200,9 @@ function ZHome() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Shop Zando home
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {zhome.slice(0, 4).map((product) => {
@@ -221,9 +221,9 @@ function Kids() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Shop fo your child
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {kids.slice(0, 4).map((product) => {
@@ -242,9 +242,9 @@ function Accessories() {
         <h1 className="uppercase text-xl lg:text-3xl font-semibold">
           Everyday Accessories
         </h1>
-        <Link className="font-semibold" to={'/'}>
+        {/* <Link className="font-semibold" to={'/'}>
           See more
-        </Link>
+        </Link> */}
       </div>
       <div className="w-full h-max grid grid-cols-2 lg:grid-cols-4 grid-flow-row gap-2.5 lg:gap-5">
         {kids.slice(0, 4).map((product) => {
